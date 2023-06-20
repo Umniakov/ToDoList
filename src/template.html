@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>TD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div id="content">
+      <!-- form for new stuff -->
+      <div id="add-item" class="px-2 hidden absolute">
+        <form action="x" class="relative">
+          <div id="add-item-btn" class="absolute top-3 right-1">
+            <button
+              type="button"
+              class="px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300"
+            >
+              Add
+            </button>
+          </div>
+          <div id="projectSelect" class="h-8 flex justify-center"></div>
+          <div id="text-fields" class="flex flex-col h-[calc(100vh-118px)]">
+            <input
+              type="text"
+              name="title"
+              id="title"
+              placeholder="Title..."
+              class="text-xl font-bold h-12"
+            />
+            <textarea
+              name="taskDescription"
+              id="taskDescription"
+              placeholder="Start typing"
+              class="resize-none grow"
+            ></textarea>
+          </div>
+          <div
+            id="taskOptions"
+            class="md:flex-row flex-col flex px-10 py-3 gap-3 justify-between items-center"
+          >
+            <div id="priority" class="flex items-center">
+              <p class="pr-2">Priority:</p>
+              <ul class="flex">
+                <li>
+                  <input
+                    type="radio"
+                    id="low"
+                    name="priority"
+                    value="low"
+                    class="fixed opacity-0 pointer-events-none peer"
+                    checked
+                  />
+                  <label
+                    for="low"
+                    class="peer-checked:bg-green-500 peer-checked:text-white px-3 peer-checked:border rounded-lg border-white hover:bg-gray-300"
+                    >Low</label
+                  >
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="medium"
+                    name="priority"
+                    value="medium"
+                    class="fixed opacity-0 pointer-events-none peer"
+                  />
+                  <label
+                    for="medium"
+                    class="peer-checked:bg-yellow-500 peer-checked:text-white px-3 peer-checked:border rounded-lg border-white hover:bg-gray-300"
+                    >Medium</label
+                  >
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="high"
+                    name="priority"
+                    value="high"
+                    class="fixed opacity-0 pointer-events-none peer"
+                  />
+                  <label
+                    for="high"
+                    class="peer-checked:bg-red-500 peer-checked:text-white px-3 peer-checked:border rounded-lg border-white hover:bg-gray-300"
+                    >High</label
+                  >
+                </li>
+              </ul>
+            </div>
+            <div id="duedate" class="block">
+              <label for="date">Due date:</label>
+              <input type="date" name="date" id="date" class="text-gray-300" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
