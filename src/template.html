@@ -6,32 +6,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
-    <div id="content">
+    <div id="content" class="relative">
       <!-- form for new stuff -->
-      <div id="add-item" class="px-2 hidden absolute">
-        <form action="x" class="relative">
+      <div
+        id="add-item"
+        class="px-2 hidden absolute sm:right-16 sm:top-6 h-96 border-2 border-gray-200 border-dashed rounded-lg"
+      >
+        <form action="" class="relative h-full" id="add-item-form">
           <div id="add-item-btn" class="absolute top-3 right-1">
             <button
-              type="button"
-              class="px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300"
+              type="submit"
+              id="add-item-btn"
+              class="relative flex justify-center items-center px-4 py-4 text-sm font-medium text-center text-white bg-green-600 rounded-full hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300"
             >
-              Add
+              <svg
+                class="absolute"
+                width="29"
+                height="23"
+                viewBox="0 0 29 23"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="1.25721"
+                  y1="11.2691"
+                  x2="13.7027"
+                  y2="21.3283"
+                  stroke="white"
+                  stroke-width="4"
+                />
+                <line
+                  x1="11.0752"
+                  y1="21.744"
+                  x2="27.2155"
+                  y2="1.74396"
+                  stroke="white"
+                  stroke-width="4"
+                />
+              </svg>
             </button>
           </div>
-          <div id="projectSelect" class="h-8 flex justify-center"></div>
-          <div id="text-fields" class="flex flex-col h-[calc(100vh-118px)]">
+          <div id="projectSelect" class="h-8 flex justify-center items-center">
+            <p>Project:</p>
+            <button
+              type="button"
+              id="drop-down-button"
+              class="flex justify-center items-center"
+            >
+              First
+              <svg
+                width="11"
+                height="6"
+                viewBox="0 0 11 6"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M1 1L5.39535 5L10 1" stroke="black" />
+              </svg>
+            </button>
+            <ul
+              id="project-drop-down-div"
+              class="absolute top-8 bg-slate-50 p-4 border-dashed rounded-lg border-gray-200 border-2 hidden"
+            >
+              <li>
+                <input
+                  type="radio"
+                  id="project-element-1"
+                  name="project-element"
+                  value="First"
+                  class="fixed opacity-0 pointer-events-none peer"
+                  checked
+                />
+                <label
+                  for="project-element-1"
+                  class="peer-checked:bg-blue-500 peer-checked:text-white px-3 peer-checked:border rounded-lg border-white hover:bg-gray-300"
+                  >First</label
+                >
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="project-element-2"
+                  name="project-element"
+                  value="Second"
+                  class="fixed opacity-0 pointer-events-none peer"
+                />
+                <label
+                  for="project-element-2"
+                  class="peer-checked:bg-blue-500 peer-checked:text-white px-3 peer-checked:border rounded-lg border-white hover:bg-gray-300"
+                  >Second</label
+                >
+              </li>
+            </ul>
+          </div>
+          <div
+            id="text-fields"
+            class="flex flex-col h-[calc(100vh-118px)] sm:h-[calc(100%-100px)]"
+          >
             <input
               type="text"
               name="title"
               id="title"
               placeholder="Title..."
-              class="text-xl font-bold h-12"
+              class="text-xl font-bold h-12 outline-none focus:border-b"
             />
+            <p class="text-xs text-gray-400 mb-2" id="timeStamp">
+              June 23 15:34
+            </p>
             <textarea
               name="taskDescription"
               id="taskDescription"
               placeholder="Start typing"
-              class="resize-none grow"
+              class="resize-none grow outline-none"
             ></textarea>
           </div>
           <div
@@ -86,9 +172,17 @@
                 </li>
               </ul>
             </div>
-            <div id="duedate" class="block">
+            <div
+              id="duedate"
+              class="flex justify-center relative before:content-['bad_format'] before:absolute before:top-6 before:text-red-400 before:hidden focus-within:before:hidden"
+            >
               <label for="date">Due date:</label>
-              <input type="date" name="date" id="date" class="text-gray-300" />
+              <input
+                type="date"
+                name="date"
+                id="date"
+                class="text-gray-300 focus:text-black"
+              />
             </div>
           </div>
         </form>

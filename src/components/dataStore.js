@@ -13,13 +13,13 @@ export const arrOfProjects = [
   },
 ];
 
-export const sample = [
+export const notesData = [
   {
-    title: "Go to that place",
-    description: "Do this and that",
-  },
-  {
-    title: "Go to another place",
-    description: "Do another this and that",
+    dueDate: "2023-06-28",
+    priority: "medium",
+    project: "First",
+    taskDescription: "some text",
+    timeOfCreation: "Jun 28 12:45",
+    title: "Title1",
   },
 ];
