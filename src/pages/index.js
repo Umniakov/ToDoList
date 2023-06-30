@@ -17,5 +17,5 @@ timeStamp();
 sidebarOpenIconMobileListener();
 formProjectSelectInteractions();
 formValidation();
-// btnToAdd();
 testBlock();
+btnToAdd();

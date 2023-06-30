@@ -1,6 +1,8 @@
-import { notesData } from "./dataStore";
+import { notesDataHandler } from "./dataStore.js";
+import { testBlock } from "./contentRender.js";
 
 export const formValidation = () => {
+  let writeToDataBase = notesDataHandler;
   const itemAddForm = document.querySelector("#add-item-form");
   const form = document.querySelector("#add-item");
   let dataProblem = false;
@@ -32,12 +34,7 @@ export const formValidation = () => {
     }
 
     if (taskDescription && !dataProblem) {
-      writeData();
-      e.target.reset();
-      form.classList.add("hidden");
-    }
-    function writeData() {
-      notesData.push({
+      writeToDataBase.addItem({
         title,
         taskDescription,
         project,
@@ -45,8 +42,9 @@ export const formValidation = () => {
         timeOfCreation,
         dueDate,
       });
-      localStorage.setItem("notesData", JSON.stringify(notesData));
-      console.log(notesData);
+      testBlock();
+      e.target.reset();
+      form.classList.add("hidden");
     }
   };
   itemAddForm.addEventListener("submit", getData);
