@@ -1,10 +1,6 @@
 import "../style/main.css";
 import mainPage from "./mainLayout.js";
-import {
-  tasksFactory,
-  btnToAdd,
-  testBlock,
-} from "../components/contentRender.js";
+import { btnToAdd, testBlock } from "../components/contentRender.js";
 import { timeStamp } from "../components/timestamp.js";
 import {
   formProjectSelectInteractions,

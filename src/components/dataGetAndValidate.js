@@ -1,8 +1,8 @@
-import { notesDataHandler } from "./dataStore.js";
+import { addObjFromValidationForm } from "./dataStore.js";
 import { testBlock } from "./contentRender.js";
 
 export const formValidation = () => {
-  let writeToDataBase = notesDataHandler;
+  let passToProceed = addObjFromValidationForm;
   const itemAddForm = document.querySelector("#add-item-form");
   const form = document.querySelector("#add-item");
   let dataProblem = false;
@@ -34,7 +34,7 @@ export const formValidation = () => {
     }
 
     if (taskDescription && !dataProblem) {
-      writeToDataBase.addItem({
+      passToProceed.addObj({
         title,
         taskDescription,
         project,

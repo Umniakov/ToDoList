@@ -1,10 +1,11 @@
 import { formForAddTask } from "./globalEventListeners.js";
-import { notesDataHandler } from "./dataStore.js";
+import { notesDataStore } from "./dataStore.js";
 import deleteIcon from "../pics/deleteIcon.png";
 import editIcon from "../pics/editIcon.png";
 
 export const tasksFactory = (task, index) => {
-  console.log(task);
+  const handle = notesDataStore;
+  // console.log(handle.getItem());
   const render = () => {
     const itemDiv = document.createElement("div");
     itemDiv.id = index;
@@ -41,7 +42,13 @@ export const tasksFactory = (task, index) => {
   `;
     return itemDiv;
   };
-  return Object.assign({}, task, { render });
+  // const listeners = () => {
+
+  // }
+  // function del() {
+  //   handle.delItem();
+  // }
+  return Object.assign({}, task, { render, handle });
 };
 
 export const btnToAdd = () => {
@@ -53,11 +60,11 @@ export const btnToAdd = () => {
 };
 export function testBlock() {
   const bodyForTasks = document.querySelector("#bodyForTasks");
-  const { getItem } = notesDataHandler;
-  console.log(getItem());
+  const { getData } = notesDataStore;
   bodyForTasks.innerHTML = "";
-  getItem().forEach((e, i) => {
+  getData().forEach((e, i) => {
     bodyForTasks.append(tasksFactory(e, i).render());
   });
+  console.log(getData());
   bodyForTasks.append(btnToAdd());
 }

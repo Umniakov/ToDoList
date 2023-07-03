@@ -12,32 +12,72 @@ export const arrOfProjects = [
     date: "blabla",
   },
 ];
-
-export const notesDataHandler = (() => {
+//Objects data
+export const notesDataStore = (() => {
   let notesData = [];
   const initData = (init) => {
     notesData = init;
   };
-  const show = () => {
+  const showInfo = () => {
     console.log(notesData);
     console.dir(localStorage);
   };
-  const addItem = (obj) => {
-    notesData.push(obj);
-    localStorage.setItem("notesData", JSON.stringify(notesData));
-    show();
-  };
-  const getItem = () => {
+  const getData = () => {
     return notesData;
   };
-  return { initData, show, addItem, getItem };
+  return { getData, initData, showInfo };
 })();
 
+//helper for storage (unbox data and pass it to add behavior)
+const createNotesObjFromLocalStore = (() => {
+  const { getData } = notesDataStore;
+  console.log(getData);
+  const initData = (init) => {
+    // localStorage.setItem("notesData", JSON.stringify(init));
+    init.forEach((e) => getData().push(createNoteObject(e)));
+  };
+  return { initData };
+})();
+//helper for input form (get data from input form and pass it to add behavior)
+export const addObjFromValidationForm = (() => {
+  const { getData } = notesDataStore;
+  const addObj = (obj) => {
+    localStorage.setItem("notesData", JSON.stringify(obj));
+    getData().push(obj);
+  };
+  return { addObj };
+})();
+
+//create Objects behavior
+function createNoteObject(obj) {
+  const delItem = () => {
+    // const found = getData().find((e) => e === obj);
+    console.log("found");
+  };
+  const updItem = () => {
+    console.log("updated");
+  };
+  return Object.assign({}, obj, { delItem, updItem });
+}
+
+//first load, get data from localStorage
+
 (() => {
-  let { initData, show } = notesDataHandler;
-  let test = JSON.parse(localStorage.getItem("notesData")) || [];
-  if (!test.length) {
-    test = [
+  // localStorage.clear();
+  let { initData } = createNotesObjFromLocalStore;
+  let { showInfo } = notesDataStore;
+  let storage = JSON.parse(localStorage.getItem("notesData")) || [];
+  console.log(storage);
+  if (!storage.length) {
+    storage = [
+      {
+        dueDate: "2023-06-28",
+        priority: "medium",
+        project: "First",
+        taskDescription: "some text Sure, go ahead, laugh if you want to.",
+        timeOfCreation: "Jun 28 12:45",
+        title: "Title1",
+      },
       {
         dueDate: "2023-06-28",
         priority: "medium",
@@ -48,6 +88,6 @@ export const notesDataHandler = (() => {
       },
     ];
   }
-  initData(test);
-  show();
+  initData(storage);
+  showInfo();
 })();
