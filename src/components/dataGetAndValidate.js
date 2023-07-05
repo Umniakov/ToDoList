@@ -1,8 +1,8 @@
-import { addObjFromValidationForm } from "./dataStore.js";
+import { notesDataStore } from "./dataStore.js";
 import { testBlock } from "./contentRender.js";
 
 export const formValidation = () => {
-  let passToProceed = addObjFromValidationForm;
+  let { createItem } = notesDataStore;
   const itemAddForm = document.querySelector("#add-item-form");
   const form = document.querySelector("#add-item");
   let dataProblem = false;
@@ -34,13 +34,14 @@ export const formValidation = () => {
     }
 
     if (taskDescription && !dataProblem) {
-      passToProceed.addObj({
+      createItem({
         title,
         taskDescription,
         project,
         priority,
         timeOfCreation,
         dueDate,
+        done: false,
       });
       testBlock();
       e.target.reset();

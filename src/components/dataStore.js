@@ -12,63 +12,47 @@ export const arrOfProjects = [
     date: "blabla",
   },
 ];
-//Objects data
+//data
 export const notesDataStore = (() => {
   let notesData = [];
   const initData = (init) => {
-    notesData = init;
+    init.forEach((e) => notesData.push(e));
+    console.log(notesData);
+  };
+  const createItem = (item) => {
+    notesData.push(item);
+    localStorage.setItem("notesData", JSON.stringify(notesData));
+  };
+  const updateItem = (obj, key, value) => {
+    if (key === "done") {
+      obj[key] = !obj[key];
+    } else {
+      obj[key] = value;
+    }
+    console.log(obj, key);
+    localStorage.setItem("notesData", JSON.stringify(notesData));
+  };
+  const removeItem = (obj) => {
+    const index = notesData.indexOf(obj);
+    notesData.splice(index, 1);
+    localStorage.setItem("notesData", JSON.stringify(notesData));
+  };
+  const getData = () => {
+    return notesData;
   };
   const showInfo = () => {
     console.log(notesData);
     console.dir(localStorage);
   };
-  const getData = () => {
-    return notesData;
-  };
-  return { getData, initData, showInfo };
+  return { getData, initData, showInfo, createItem, removeItem, updateItem };
 })();
-
-//helper for storage (unbox data and pass it to add behavior)
-const createNotesObjFromLocalStore = (() => {
-  const { getData } = notesDataStore;
-  console.log(getData);
-  const initData = (init) => {
-    // localStorage.setItem("notesData", JSON.stringify(init));
-    init.forEach((e) => getData().push(createNoteObject(e)));
-  };
-  return { initData };
-})();
-//helper for input form (get data from input form and pass it to add behavior)
-export const addObjFromValidationForm = (() => {
-  const { getData } = notesDataStore;
-  const addObj = (obj) => {
-    localStorage.setItem("notesData", JSON.stringify(obj));
-    getData().push(obj);
-  };
-  return { addObj };
-})();
-
-//create Objects behavior
-function createNoteObject(obj) {
-  const delItem = () => {
-    // const found = getData().find((e) => e === obj);
-    console.log("found");
-  };
-  const updItem = () => {
-    console.log("updated");
-  };
-  return Object.assign({}, obj, { delItem, updItem });
-}
 
 //first load, get data from localStorage
-
 (() => {
   // localStorage.clear();
-  let { initData } = createNotesObjFromLocalStore;
-  let { showInfo } = notesDataStore;
-  let storage = JSON.parse(localStorage.getItem("notesData")) || [];
-  console.log(storage);
-  if (!storage.length) {
+  let { initData } = notesDataStore;
+  let storage = JSON.parse(localStorage.getItem("notesData")) || true;
+  if (storage === true || !storage.length) {
     storage = [
       {
         dueDate: "2023-06-28",
@@ -77,6 +61,7 @@ function createNoteObject(obj) {
         taskDescription: "some text Sure, go ahead, laugh if you want to.",
         timeOfCreation: "Jun 28 12:45",
         title: "Title1",
+        done: false,
       },
       {
         dueDate: "2023-06-28",
@@ -85,9 +70,10 @@ function createNoteObject(obj) {
         taskDescription: "some text Sure, go ahead, laugh if you want to.",
         timeOfCreation: "Jun 28 12:45",
         title: "Title1",
+        done: true,
       },
     ];
+    localStorage.setItem("notesData", JSON.stringify(storage));
   }
   initData(storage);
-  showInfo();
 })();
