@@ -1,8 +1,7 @@
-import { formForAddTask } from "./globalEventListeners.js";
 import { notesDataStore } from "./dataStore.js";
 import deleteIcon from "../pics/deleteIcon.png";
 import editIcon from "../pics/editIcon.png";
-
+import { dataFormatForPrint } from "../components/timestamp.js";
 export const tasksFactory = (task, index) => {
   const { removeItem, updateItem } = notesDataStore;
   const itemDiv = document.createElement("div");
@@ -22,15 +21,25 @@ export const tasksFactory = (task, index) => {
         <div class="">
         <input type="checkbox" class="h-5 w-5 bg-cyan-100 data-done">
         </div>
-        <div data-data>
-          <h2 data-text='h2' class='outline-none' contenteditable="true">${task.title}</h2>
-          <p data-text='p' class='outline-none' contenteditable="true">${task.taskDescription}</p>
+        <div data-data class="grow">
+          <h2 data-text='h2' class='outline-none' contenteditable="true">${
+            task.title
+          }</h2>
+          <p data-text='p' class='outline-none' contenteditable="true">${
+            task.taskDescription
+          }</p>
           <div class="flex items-center">
           <p class="text-gray-500">${task.timeOfCreation}</p>
           <p class="bg-green-500 text-white px-3 py-0.5 rounded-lg border-white hover:bg-gray-300 ml-2 text-xs flex items-center">Low</p>
           </div>
         </div>
-        <div class="ml-auto flex invisible items-center gap-2 group-hover:visible">
+        <div class="md:w-56 hidden md:block">
+          <div class="text-gray-500">Due date: ${dataFormatForPrint(
+            task.dueDate
+          )}</div>
+          <div class="text-gray-500">Project: ${task.project}</div>
+        </div>
+        <div class="md:flex ml-auto invisible items-center gap-2 group-hover:visible hidden group-hover:flex">
           <div class="">
           <img src="${editIcon}" alt="edit" class=" max-w-none h-6 w-6">
           </div>
@@ -44,8 +53,8 @@ export const tasksFactory = (task, index) => {
   render();
   const textNodes = itemDiv.querySelectorAll("[data-text]");
   const checkbox = itemDiv.querySelector("input[type=checkbox]");
-  console.log(checkbox);
-  console.log(task.done);
+  // console.log(checkbox);
+  // console.log(task.done);
   if (task.done) {
     textNodes.forEach((e) => e.classList.toggle("line-through"));
     checkbox.checked = true;
@@ -79,19 +88,13 @@ export const tasksFactory = (task, index) => {
   return Object.assign({}, task, { render });
 };
 
-export const btnToAdd = () => {
-  const tskBtn = document.createElement("button");
-  tskBtn.setAttribute("type", "button");
-  tskBtn.textContent = "+Add task";
-  tskBtn.addEventListener("click", formForAddTask);
-  return tskBtn;
-};
-export function testBlock() {
+export function taskInstancesCreationController() {
   const bodyForTasks = document.querySelector("#bodyForTasks");
   const { getData } = notesDataStore;
   bodyForTasks.innerHTML = "";
   getData().forEach((e, i) => {
     tasksFactory(e, i);
   });
-  bodyForTasks.append(btnToAdd());
 }
+
+//buttons to add prod and note

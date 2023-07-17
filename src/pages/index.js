@@ -1,17 +1,15 @@
 import "../style/main.css";
+import "../components/sanitize.js";
+import "../components/addTaskFormTemplate.js";
 import mainPage from "./mainLayout.js";
-import { btnToAdd, testBlock } from "../components/contentRender.js";
-import { timeStamp } from "../components/timestamp.js";
+import { taskInstancesCreationController } from "../components/contentRender.js";
 import {
-  formProjectSelectInteractions,
   sidebarOpenIconMobileListener,
+  formProjectSelectInteractions,
 } from "../components/globalEventListeners.js";
-import { formValidation } from "../components/dataGetAndValidate.js";
+import "../components/dataGetAndValidate.js";
 const main = document.querySelector("#content");
 main.append(mainPage());
-timeStamp();
 sidebarOpenIconMobileListener();
 formProjectSelectInteractions();
-formValidation();
-testBlock();
-btnToAdd();
+taskInstancesCreationController();

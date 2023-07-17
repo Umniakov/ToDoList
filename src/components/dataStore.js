@@ -1,17 +1,7 @@
-export const arrOfProjects = [
-  {
-    name: "first one",
-    date: "123",
-  },
-  {
-    name: "second one",
-    date: "sdfsd",
-  },
-  {
-    name: "third one",
-    date: "blabla",
-  },
-];
+export const projectDataStore = (() => {
+  let projectData = [];
+  return { projectData };
+})();
 //data
 export const notesDataStore = (() => {
   let notesData = [];

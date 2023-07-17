@@ -1,10 +1,9 @@
 import { notesDataStore } from "./dataStore.js";
-import { testBlock } from "./contentRender.js";
-
+import { taskInstancesCreationController } from "./contentRender.js";
+import { sanitize } from "./sanitize.js";
 export const formValidation = () => {
   let { createItem } = notesDataStore;
   const itemAddForm = document.querySelector("#add-item-form");
-  const form = document.querySelector("#add-item");
   let dataProblem = false;
   const getData = (e) => {
     e.preventDefault();
@@ -35,17 +34,18 @@ export const formValidation = () => {
 
     if (taskDescription && !dataProblem) {
       createItem({
-        title,
-        taskDescription,
+        title: sanitize(title),
+        taskDescription: sanitize(taskDescription),
         project,
         priority,
         timeOfCreation,
         dueDate,
         done: false,
       });
-      testBlock();
-      e.target.reset();
-      form.classList.add("hidden");
+      taskInstancesCreationController();
+      document
+        .querySelector("#btn-to-add-task")
+        .classList.remove("buttonDecorationOpen");
     }
   };
   itemAddForm.addEventListener("submit", getData);

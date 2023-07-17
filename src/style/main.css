@@ -1,3 +1,78 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.buttonDecoration::after,
+.buttonDecoration::before {
+  display: flex;
+  position: absolute;
+  content: "";
+  width: 3px;
+  height: 20px;
+  background-color: white;
+  border-radius: 5px;
+  transition: transform 0.2s;
+}
+
+.buttonDecoration::after {
+  rotate: 90deg;
+}
+
+.buttonDecoration:hover::after,
+.buttonDecoration:hover::before {
+  transform: rotate(90deg);
+}
+
+.buttonDecoration:hover {
+  background-color: #fb923c;
+  transform: scale(1.1);
+}
+/* open */
+.buttonDecoration.buttonDecorationOpen {
+  transition: transform 0.2s;
+  background-color: #dc2626;
+}
+.buttonDecoration.buttonDecorationOpen:hover {
+  background-color: rgb(223, 59, 9);
+  transform: scale(1.05);
+}
+
+.buttonDecoration.buttonDecorationOpen::after,
+.buttonDecoration.buttonDecorationOpen::before {
+  display: flex;
+  position: absolute;
+  content: "";
+  width: 3px;
+  height: 20px;
+  background-color: white;
+  border-radius: 5px;
+  transition: transform 0.2s;
+}
+.buttonDecoration.buttonDecorationOpen::after {
+  transform: rotate(45deg);
+}
+.buttonDecoration.buttonDecorationOpen:before {
+  transform: rotate(45deg);
+}
+
+.buttonDecoration.buttonDecorationOpen:hover::after,
+.buttonDecoration.buttonDecorationOpen:hover::before {
+  transform: rotate(135deg);
+}
