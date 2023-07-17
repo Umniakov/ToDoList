@@ -76,3 +76,30 @@
 .buttonDecoration.buttonDecorationOpen:hover::before {
   transform: rotate(135deg);
 }
+
+.delIcon::before,
+.delIcon::after {
+  display: flex;
+  position: absolute;
+  content: "";
+  width: 3px;
+  height: 14px;
+  background-color: white;
+  border-radius: 5px;
+  transition: transform 0.2s;
+}
+.delIcon:hover {
+  transform: scale(1.05);
+}
+
+.delIcon::before {
+  rotate: 45deg;
+}
+.delIcon::after {
+  rotate: -45deg;
+}
+
+.delIcon:hover::before,
+.delIcon:hover::after {
+  transform: rotate(90deg);
+}

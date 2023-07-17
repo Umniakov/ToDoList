@@ -1,7 +1,7 @@
 import { notesDataStore } from "./dataStore.js";
-import deleteIcon from "../pics/deleteIcon.png";
 import editIcon from "../pics/editIcon.png";
 import { dataFormatForPrint } from "../components/timestamp.js";
+import { priorTemplate } from "../components/priorityChange.js";
 export const tasksFactory = (task, index) => {
   const { removeItem, updateItem } = notesDataStore;
   const itemDiv = document.createElement("div");
@@ -30,7 +30,9 @@ export const tasksFactory = (task, index) => {
           }</p>
           <div class="flex items-center">
           <p class="text-gray-500">${task.timeOfCreation}</p>
-          <p class="bg-green-500 text-white px-3 py-0.5 rounded-lg border-white hover:bg-gray-300 ml-2 text-xs flex items-center">Low</p>
+          <p class="text-white px-3 py-0.5 rounded-lg border-white ml-2 text-xs flex items-center cursor-pointer" data-priority>${
+            task.priority
+          }</p>
           </div>
         </div>
         <div class="md:w-56 hidden md:block">
@@ -41,20 +43,34 @@ export const tasksFactory = (task, index) => {
         </div>
         <div class="md:flex ml-auto invisible items-center gap-2 group-hover:visible hidden group-hover:flex">
           <div class="">
-          <img src="${editIcon}" alt="edit" class=" max-w-none h-6 w-6">
+          <img src="${editIcon}" alt="edit" class="max-w-none h-6 w-6 hover:scale-105 transform duration-100 hover:rotate-45">
           </div>
-          <div class="">
-          <img src="${deleteIcon}" alt="delete" class="max-w-none h-6 w-6" data-del>
+          <div class="delIcon h-5 w-5 bg-red-400 hover:bg-red-500 rounded-full relative flex items-center justify-center" data-del>
           </div>
         </div>
   `;
     return itemDiv;
   };
+
   render();
   const textNodes = itemDiv.querySelectorAll("[data-text]");
   const checkbox = itemDiv.querySelector("input[type=checkbox]");
-  // console.log(checkbox);
-  // console.log(task.done);
+  const item = itemDiv.querySelector("[data-priority]");
+  //priority coloring and listen
+  if (task.priority === "low") {
+    item.classList.add("bg-green-500");
+  } else if (task.priority === "medium") {
+    item.classList.add("bg-yellow-500");
+  } else if (task.priority === "high") {
+    item.classList.add("bg-red-500");
+  }
+  item.addEventListener("click", () => {
+    item.innerHTML = priorTemplate;
+    const priorit = item.querySelector('input[name="priority"]');
+    console.log(priorit);
+  });
+  // priorit.addEventListener("click", (e) => console.log(e));
+
   if (task.done) {
     textNodes.forEach((e) => e.classList.toggle("line-through"));
     checkbox.checked = true;
@@ -97,4 +113,17 @@ export function taskInstancesCreationController() {
   });
 }
 
+function makePriority(prior) {
+  console.log(prior);
+  const item = prior.querySelector("[data-priority]");
+  console.log(item);
+  const priority = document.createElement("div");
+  priority;
+  priority;
+  if (prior === "low") {
+    return `<p class="bg-green-500 text-white px-3 py-0.5 rounded-lg border-white hover:bg-gray-300 ml-2 text-xs flex items-center cursor-pointer">low</p>`;
+  } else if (prior === "medium") {
+    return `<p class="bg-yellow-500 text-white px-3 py-0.5 rounded-lg border-white hover:bg-gray-300 ml-2 text-xs flex items-center cursor-pointer">medium</p>`;
+  }
+}
 //buttons to add prod and note

@@ -1,4 +1,7 @@
-const template = `<div
+import { timeStamp } from "./timestamp";
+
+const templateCreate = () => {
+  const template = `<div
 id="add-item"
 class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
 >
@@ -101,7 +104,7 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
       class="text-xl font-bold h-12 outline-none focus:border-b"
     />
     <p class="text-xs text-gray-400 mb-2" id="timeStamp">
-      June 23 15:34
+      ${timeStamp()}
     </p>
     <textarea
       name="taskDescription"
@@ -177,9 +180,11 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
   </div>
 </form>
 </div>`;
+  return template;
+};
 export const formToAddNewItem = () => {
   const divForm = document.createElement("div");
   divForm.id = "addedForm";
-  divForm.innerHTML = template;
+  divForm.innerHTML = templateCreate();
   return divForm;
 };
