@@ -41,6 +41,7 @@ export const formValidation = () => {
         timeOfCreation,
         dueDate,
         done: false,
+        id: Date.now(),
       });
       taskInstancesCreationController();
       document

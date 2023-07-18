@@ -2,6 +2,8 @@ import { notesDataStore } from "./dataStore.js";
 import editIcon from "../pics/editIcon.png";
 import { dataFormatForPrint } from "../components/timestamp.js";
 import { priorTemplate } from "../components/priorityChange.js";
+const { temp } = priorTemplate();
+
 export const tasksFactory = (task, index) => {
   const { removeItem, updateItem } = notesDataStore;
   const itemDiv = document.createElement("div");
@@ -28,11 +30,12 @@ export const tasksFactory = (task, index) => {
           <p data-text='p' class='outline-none' contenteditable="true">${
             task.taskDescription
           }</p>
-          <div class="flex items-center">
+          <div class="flex items-center" data-priority-parent>
           <p class="text-gray-500">${task.timeOfCreation}</p>
           <p class="text-white px-3 py-0.5 rounded-lg border-white ml-2 text-xs flex items-center cursor-pointer" data-priority>${
             task.priority
           }</p>
+          <div class="px-3 py-0.5 rounded-lg border-white ml-2 text-xs items-center cursor-pointer hidden" data-priority-selector></div>
           </div>
         </div>
         <div class="md:w-56 hidden md:block">
@@ -57,18 +60,50 @@ export const tasksFactory = (task, index) => {
   const checkbox = itemDiv.querySelector("input[type=checkbox]");
   const item = itemDiv.querySelector("[data-priority]");
   //priority coloring and listen
-  if (task.priority === "low") {
-    item.classList.add("bg-green-500");
-  } else if (task.priority === "medium") {
-    item.classList.add("bg-yellow-500");
-  } else if (task.priority === "high") {
-    item.classList.add("bg-red-500");
+  function priorityColoring(element) {
+    if (task.priority === "low") {
+      element.classList.add("bg-green-500");
+      element.classList.remove("bg-yellow-500");
+      element.classList.remove("bg-red-500");
+    } else if (task.priority === "medium") {
+      element.classList.add("bg-yellow-500");
+      element.classList.remove("bg-red-500");
+      element.classList.remove("bg-green-500");
+    } else if (task.priority === "high") {
+      element.classList.add("bg-red-500");
+      element.classList.remove("bg-yellow-500");
+      element.classList.remove("bg-green-500");
+    }
   }
+  priorityColoring(item);
+  const priorSelector = itemDiv.querySelector("[data-priority-selector]");
+  console.log(priorSelector);
   item.addEventListener("click", () => {
-    item.innerHTML = priorTemplate;
-    const priorit = item.querySelector('input[name="priority"]');
+    item.classList.add("hidden");
+    priorSelector.classList.replace("hidden", "flex");
+    priorSelector.innerHTML = temp();
+    priorityColoring(priorSelector);
+    const priorit = priorSelector.querySelectorAll('input[type="radio"]');
     console.log(priorit);
+    priorit.forEach((e) => {
+      if (e.value === task.priority) {
+        e.checked = true;
+      }
+    });
   });
+  priorSelector.addEventListener("click", changePriority);
+  function changePriority(e) {
+    if (e.target.nodeName === "INPUT") {
+      task.priority = e.target.defaultValue;
+      priorityColoring(priorSelector);
+      priorSelector.classList.replace("flex", "hidden");
+      priorSelector.innerHTML = "";
+      priorityColoring(item);
+      item.textContent = e.target.defaultValue;
+      item.classList.remove("hidden");
+    }
+  }
+
   // priorit.addEventListener("click", (e) => console.log(e));
 
   if (task.done) {
@@ -76,8 +111,8 @@ export const tasksFactory = (task, index) => {
     checkbox.checked = true;
   }
   itemDiv.addEventListener("click", (e) => {
-    console.log(e.target.dataset);
-    console.dir(e.target);
+    // console.log(e.target.dataset);
+    // console.dir(e.target);
     if (e.target.hasAttribute("data-del")) {
       itemDiv.remove();
       removeItem(task);
@@ -113,17 +148,4 @@ export function taskInstancesCreationController() {
   });
 }
 
-function makePriority(prior) {
-  console.log(prior);
-  const item = prior.querySelector("[data-priority]");
-  console.log(item);
-  const priority = document.createElement("div");
-  priority;
-  priority;
-  if (prior === "low") {
-    return `<p class="bg-green-500 text-white px-3 py-0.5 rounded-lg border-white hover:bg-gray-300 ml-2 text-xs flex items-center cursor-pointer">low</p>`;
-  } else if (prior === "medium") {
-    return `<p class="bg-yellow-500 text-white px-3 py-0.5 rounded-lg border-white hover:bg-gray-300 ml-2 text-xs flex items-center cursor-pointer">medium</p>`;
-  }
-}
 //buttons to add prod and note

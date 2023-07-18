@@ -52,6 +52,7 @@ export const notesDataStore = (() => {
         timeOfCreation: "Jun 28 12:45",
         title: "Title1",
         done: false,
+        id: 1689703004641,
       },
       {
         dueDate: "2023-06-28",
@@ -61,9 +62,14 @@ export const notesDataStore = (() => {
         timeOfCreation: "Jun 28 12:45",
         title: "Title1",
         done: true,
+        id: 1689703004642,
       },
     ];
     localStorage.setItem("notesData", JSON.stringify(storage));
   }
   initData(storage);
+})();
+
+(() => {
+  notesDataStore.getData().forEach((e) => console.log(e));
 })();

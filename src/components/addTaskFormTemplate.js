@@ -103,9 +103,7 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
       placeholder="Title..."
       class="text-xl font-bold h-12 outline-none focus:border-b"
     />
-    <p class="text-xs text-gray-400 mb-2" id="timeStamp">
-      ${timeStamp()}
-    </p>
+    <p class="text-xs text-gray-400 mb-2" id="timeStamp">${timeStamp()}</p>
     <textarea
       name="taskDescription"
       id="taskDescription"
