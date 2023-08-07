@@ -1,8 +1,32 @@
 export const projectDataStore = (() => {
   let projectData = [];
-  return { projectData };
+  const initProjectData = (init) => {
+    init.forEach((e) => projectData.push(e));
+  };
+  const createProject = (project) => {
+    projectData.push(project);
+    localStorage.setItem("projectData", JSON.stringify(projectData));
+  };
+  const readProject = () => {
+    return projectData;
+  };
+  const updateProject = (project, value) => {
+    projectData[project] = value;
+    localStorage.setItem("projectData", JSON.stringify(projectData));
+  };
+  const deleteProject = (project) => {
+    projectData[project].remove();
+    localStorage.setItem("projectData", JSON.stringify(projectData));
+  };
+  return {
+    createProject,
+    updateProject,
+    deleteProject,
+    readProject,
+    initProjectData,
+  };
 })();
-//data
+//notes data
 export const notesDataStore = (() => {
   let notesData = [];
   const initData = (init) => {
@@ -19,7 +43,7 @@ export const notesDataStore = (() => {
     } else {
       obj[key] = value;
     }
-    console.log(obj, key);
+    // console.log(obj, key);
     localStorage.setItem("notesData", JSON.stringify(notesData));
   };
   const removeItem = (obj) => {
@@ -41,13 +65,13 @@ export const notesDataStore = (() => {
 (() => {
   // localStorage.clear();
   let { initData } = notesDataStore;
-  let storage = JSON.parse(localStorage.getItem("notesData")) || true;
-  if (storage === true || !storage.length) {
+  let storage = JSON.parse(localStorage.getItem("notesData")) || "empty";
+  if (storage === "empty" || !storage.length) {
     storage = [
       {
         dueDate: "2023-06-28",
         priority: "medium",
-        project: "First",
+        project: "Main",
         taskDescription: "some text Sure, go ahead, laugh if you want to.",
         timeOfCreation: "Jun 28 12:45",
         title: "Title1",
@@ -57,7 +81,7 @@ export const notesDataStore = (() => {
       {
         dueDate: "2023-06-28",
         priority: "medium",
-        project: "First",
+        project: "Second",
         taskDescription: "some text Sure, go ahead, laugh if you want to.",
         timeOfCreation: "Jun 28 12:45",
         title: "Title1",
@@ -71,5 +95,11 @@ export const notesDataStore = (() => {
 })();
 
 (() => {
-  notesDataStore.getData().forEach((e) => console.log(e));
+  let { initProjectData } = projectDataStore;
+  let storage = JSON.parse(localStorage.getItem("projectData")) || "empty";
+  if (storage === "empty" || !storage.length) {
+    storage = ["Main", "Second"];
+  }
+  localStorage.setItem("projectData", JSON.stringify(storage));
+  initProjectData(storage);
 })();

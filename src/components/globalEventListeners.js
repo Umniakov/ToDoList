@@ -1,14 +1,30 @@
-import { timeStamp } from "./timestamp.js";
 import { formToAddNewItem } from "./addTaskFormTemplate.js";
 import { formValidation } from "./dataGetAndValidate.js";
+import { makeFormForNewProject } from "./contentRender.js";
 export function formProjectSelectInteractions() {
   const bodyForTasks = document.querySelector("#bodyForTasks");
   const btnToAddNewTask = document.querySelector("#btn-to-add-task");
+
+  //close add-new form if clicked outside
+  function formListenerHandler(event) {
+    if (
+      event.target !== btnToAddNewTask &&
+      !bodyForTasks.firstChild.contains(event.target)
+    ) {
+      if (bodyForTasks.firstChild.id === "addedForm") {
+        console.log("true");
+        bodyForTasks.firstChild.remove();
+        btnToAddNewTask.classList.remove("buttonDecorationOpen");
+        document.removeEventListener("click", formListenerHandler);
+      }
+    }
+  }
   btnToAddNewTask.addEventListener("click", () => {
     if (bodyForTasks.firstChild.id !== "addedForm") {
       console.log(bodyForTasks.firstChild.id);
       bodyForTasks.insertBefore(formToAddNewItem(), bodyForTasks.firstChild);
       btnToAddNewTask.classList.add("buttonDecorationOpen");
+      document.addEventListener("click", formListenerHandler);
       formValidation();
     } else {
       bodyForTasks.removeChild(bodyForTasks.childNodes[0]);
@@ -62,9 +78,11 @@ export function sidebarOpenIconMobileListener() {
   });
 }
 
-export const formForAddTask = () => {
-  const form = document.querySelector("#add-item");
-  const timestamp = document.querySelector("#timeStamp");
-  timestamp.textContent = timeStamp();
-  form.classList.toggle("hidden");
-};
+export function addProjectSidebarBtn() {
+  const btnToAddProject = document.querySelector("[data-add-project-btn]");
+  btnToAddProject.addEventListener("click", addNewProjectHandler);
+  function addNewProjectHandler(e) {
+    console.log(e.target);
+    makeFormForNewProject();
+  }
+}
