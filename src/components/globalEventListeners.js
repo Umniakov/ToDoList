@@ -1,6 +1,6 @@
 import { formToAddNewItem } from "./addTaskFormTemplate.js";
 import { formValidation } from "./dataGetAndValidate.js";
-import { makeFormForNewProject } from "./contentRender.js";
+import { makeFormForNewProject, renderWithFilters } from "./contentRender.js";
 export function formProjectSelectInteractions() {
   const bodyForTasks = document.querySelector("#bodyForTasks");
   const btnToAddNewTask = document.querySelector("#btn-to-add-task");
@@ -85,4 +85,17 @@ export function addProjectSidebarBtn() {
     console.log(e.target);
     makeFormForNewProject();
   }
+}
+
+//listening links to correct render
+export function pagesListeners() {
+  const allTasksPage = document.querySelector("#allTasksPage");
+  const todayTasksPage = document.querySelector("#todayTasksPage");
+  const weekTasks = document.querySelector("#weekTasks");
+  allTasksPage.addEventListener("click", renderWithFilters.renderAllTasksPage);
+  todayTasksPage.addEventListener(
+    "click",
+    renderWithFilters.renderTodayTasksPage
+  );
+  weekTasks.addEventListener("click", renderWithFilters.renderWeekTasks);
 }

@@ -159,15 +159,19 @@ export const formToChangeItem = (id) => {
   const { readProject } = projectDataStore;
   const projectItemTemplate = (projects) => {
     projects.forEach((e) => {
+      let currentProject = "";
       const li = document.createElement("li");
+      if (data[index].project === e) {
+        currentProject = "checked";
+      }
       li.innerHTML = `
       <input
-        type="radio"
-        id="${e}"
-        name="project-element"
-        value="${e}"
-        class="fixed opacity-0 pointer-events-none peer"
-        checked
+      type="radio"
+      id="${e}"
+      name="project-element"
+      value="${e}"
+      class="fixed opacity-0 pointer-events-none peer"
+      ${currentProject}
       />
       <label
         for="${e}"

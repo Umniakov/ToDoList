@@ -1,6 +1,10 @@
 import { notesDataStore, projectDataStore } from "./dataStore.js";
 import editIcon from "../pics/editIcon.png";
-import { dataFormatForPrint } from "../components/timestamp.js";
+import {
+  dataFormatForPrint,
+  todayDate,
+  isCurrentWeek,
+} from "../components/timestamp.js";
 import { priorTemplate } from "../components/priorityChange.js";
 import { formToChangeItem } from "../components/changeTaskFormTemplate.js";
 const { temp } = priorTemplate();
@@ -220,19 +224,19 @@ export const tasksFactory = (task, index) => {
     }
   }
   //!!!!!!!!!!!!!!!!!!!!!!redo
-  return Object.assign({}, task, { render });
+  // return Object.assign({}, task, { render });
 };
 
-export function taskInstancesCreationController() {
+export function taskInstancesCreationController(arr) {
   const bodyForTasks = document.querySelector("#bodyForTasks");
-  const { getData } = notesDataStore;
   bodyForTasks.innerHTML = "";
-  getData().forEach((e, i) => {
+  // console.log(arr);
+  arr.forEach((e, i) => {
     tasksFactory(e, i);
   });
 }
 
-const projectFactory = (e, i) => {
+const projectFactory = (e) => {
   const li = document.createElement("li");
   const bodyForProjects = document.querySelector("[data-project-list]");
   let template = `<a href="#" class="flex items-center p-1 text-gray-900 rounded-lg  hover:bg-gray-100 ">
@@ -331,6 +335,27 @@ export function makeFormForNewProject() {
 }
 
 //rendering with project/time dependency
-// renderAllTasksPage() {
+export const renderWithFilters = (() => {
+  const { getData } = notesDataStore;
+  let today = todayDate();
+  function renderAllTasksPage() {
+    let arr = getData().filter((e) => e.done === false);
+    let arr2 = getData().filter((e) => e.done === true);
+    console.log(arr);
+    taskInstancesCreationController(arr2);
+    console.log("renderWithFilters");
+  }
+  function renderTodayTasksPage() {
+    let todayTasks = getData().filter((e) => today === e.dueDate);
+    console.log(todayTasks);
+    taskInstancesCreationController(todayTasks);
+    console.log("renderDay");
+  }
+  function renderWeekTasks() {
+    let todayTasks = getData().filter((e) => isCurrentWeek(e.dueDate));
 
-// }
+    console.log(todayTasks);
+    taskInstancesCreationController(todayTasks);
+  }
+  return { renderAllTasksPage, renderTodayTasksPage, renderWeekTasks };
+})();

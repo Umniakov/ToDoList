@@ -43,7 +43,7 @@ export const formValidation = () => {
         done: false,
         id: Date.now(),
       });
-      taskInstancesCreationController();
+      taskInstancesCreationController(notesDataStore.getData());
       document
         .querySelector("#btn-to-add-task")
         .classList.remove("buttonDecorationOpen");

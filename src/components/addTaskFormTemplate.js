@@ -46,7 +46,7 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
       id="drop-down-button"
       class="flex justify-center items-center"
     >
-      First
+      Main
       <svg
         width="11"
         height="6"
@@ -158,10 +158,13 @@ export const formToAddNewItem = () => {
   divForm.innerHTML = templateCreate();
 
   const projectList = divForm.querySelector("#project-drop-down-div");
-  console.log(projectList);
   const { readProject } = projectDataStore;
   const projectItemTemplate = (projects) => {
     projects.forEach((e) => {
+      let selectedMainProject = "";
+      if (e === "Main") {
+        selectedMainProject = "checked";
+      }
       const li = document.createElement("li");
       li.innerHTML = `
       <input
@@ -170,7 +173,7 @@ export const formToAddNewItem = () => {
         name="project-element"
         value="${e}"
         class="fixed opacity-0 pointer-events-none peer"
-        checked
+        ${selectedMainProject}
       />
       <label
         for="${e}"

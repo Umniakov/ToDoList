@@ -3,19 +3,21 @@ import "../components/sanitize.js";
 import "../components/addTaskFormTemplate.js";
 import mainPage from "./mainLayout.js";
 import {
-  taskInstancesCreationController,
+  renderWithFilters,
   projectInstancesCreationController,
 } from "../components/contentRender.js";
 import {
   sidebarOpenIconMobileListener,
   formProjectSelectInteractions,
   addProjectSidebarBtn,
+  pagesListeners,
 } from "../components/globalEventListeners.js";
 import "../components/dataGetAndValidate.js";
 const main = document.querySelector("#content");
 main.append(mainPage());
 sidebarOpenIconMobileListener();
 formProjectSelectInteractions();
-taskInstancesCreationController();
+renderWithFilters.renderAllTasksPage();
 addProjectSidebarBtn();
 projectInstancesCreationController();
+pagesListeners();
