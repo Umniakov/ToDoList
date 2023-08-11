@@ -55,10 +55,10 @@ const mainPage = () => {
       Project: <span>hehe</span>
       </div>
       <div class="flex gap-6 md:p-4 items-center justify-evenly md:justify-start">
-      <button type="button" class="rounded-lg bg-blue-100 py-1 px-4 hover:bg-blue-300">To Do
+      <button type="button" class="rounded-lg bg-blue-100 py-1 px-4 hover:bg-blue-300" data-todo>To Do
       <span class="inline-flex items-center justify-center px-2 ml-2 text-sm font-medium text-gray-800 bg-blue-50 rounded-full">5</span>
       </button>
-      <button type="button" class="rounded-lg bg-emerald-100 py-1 px-4 hover:bg-emerald-300">Done
+      <button type="button" class="rounded-lg bg-emerald-100 py-1 px-4 hover:bg-emerald-300" data-done>Done
       <span class="inline-flex items-center justify-center px-2 ml-2 text-sm font-medium text-gray-800 bg-blue-50 rounded-full">2</span>
       </button>
 

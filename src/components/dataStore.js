@@ -61,6 +61,38 @@ export const notesDataStore = (() => {
   return { getData, initData, showInfo, createItem, removeItem, updateItem };
 })();
 
+//project, selected time and done/todo status
+export const stateHolder = (() => {
+  let stateData = "todo";
+  const setData = (state) => {
+    stateData = state;
+  };
+  const getTodoData = () => {
+    return stateData;
+  };
+  return { setData, getTodoData };
+})();
+
+export const menuOptions = (() => {
+  let menuState = "allTasksPage";
+  const updateState = (state) => {
+    if (state === "allTasksPage") {
+      menuState = "allTasksPage";
+    } else if (state === "todayTasksPage") {
+      menuState = "todayTasksPage";
+    } else if (state === "weekTasks") {
+      menuState = "weekTasks";
+    } else {
+      menuState = state.target.innerText;
+    }
+    console.log(menuState);
+  };
+  const getMenuOption = () => {
+    return menuState;
+  };
+  return { updateState, getMenuOption };
+})();
+
 //first load, get data from localStorage
 (() => {
   // localStorage.clear();

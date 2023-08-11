@@ -1,6 +1,7 @@
 import { formToAddNewItem } from "./addTaskFormTemplate.js";
 import { formValidation } from "./dataGetAndValidate.js";
 import { makeFormForNewProject, renderWithFilters } from "./contentRender.js";
+import { stateHolder, menuOptions } from "./dataStore.js";
 export function formProjectSelectInteractions() {
   const bodyForTasks = document.querySelector("#bodyForTasks");
   const btnToAddNewTask = document.querySelector("#btn-to-add-task");
@@ -92,10 +93,24 @@ export function pagesListeners() {
   const allTasksPage = document.querySelector("#allTasksPage");
   const todayTasksPage = document.querySelector("#todayTasksPage");
   const weekTasks = document.querySelector("#weekTasks");
-  allTasksPage.addEventListener("click", renderWithFilters.renderAllTasksPage);
-  todayTasksPage.addEventListener(
-    "click",
-    renderWithFilters.renderTodayTasksPage
+  //addListenerOnRuntimeFender
+  // const projects = document.querySelectorAll(
+  //   "[data-project-list] [data-project-name]"
+  // );
+  console.log([allTasksPage], [todayTasksPage]);
+  [allTasksPage, todayTasksPage, weekTasks].forEach((e) =>
+    e.addEventListener("click", () => menuOptions.updateState(e.id))
   );
-  weekTasks.addEventListener("click", renderWithFilters.renderWeekTasks);
+  const toDo = document.querySelector("[data-todo]");
+  const done = document.querySelector("[data-done]");
+  toDo.addEventListener("click", fulfillmentSwitch);
+  done.addEventListener("click", fulfillmentSwitch);
+  function fulfillmentSwitch(e) {
+    if (e.target.hasAttribute("data-done")) {
+      stateHolder.setData("done");
+    } else {
+      stateHolder.setData("todo");
+    }
+    renderWithFilters.toDoStateRender();
+  }
 }

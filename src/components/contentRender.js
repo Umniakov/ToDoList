@@ -1,4 +1,9 @@
-import { notesDataStore, projectDataStore } from "./dataStore.js";
+import {
+  notesDataStore,
+  projectDataStore,
+  menuOptions,
+  stateHolder,
+} from "./dataStore.js";
 import editIcon from "../pics/editIcon.png";
 import {
   dataFormatForPrint,
@@ -7,6 +12,8 @@ import {
 } from "../components/timestamp.js";
 import { priorTemplate } from "../components/priorityChange.js";
 import { formToChangeItem } from "../components/changeTaskFormTemplate.js";
+import { sanitize } from "./sanitize.js";
+
 const { temp } = priorTemplate();
 
 export const tasksFactory = (task, index) => {
@@ -223,8 +230,6 @@ export const tasksFactory = (task, index) => {
       document.removeEventListener("click", renderOriginal);
     }
   }
-  //!!!!!!!!!!!!!!!!!!!!!!redo
-  // return Object.assign({}, task, { render });
 };
 
 export function taskInstancesCreationController(arr) {
@@ -240,7 +245,7 @@ const projectFactory = (e) => {
   const li = document.createElement("li");
   const bodyForProjects = document.querySelector("[data-project-list]");
   let template = `<a href="#" class="flex items-center p-1 text-gray-900 rounded-lg  hover:bg-gray-100 ">
-  <span class="flex-1 ml-3 whitespace-nowrap">${e}</span>
+  <span class="flex-1 ml-3 whitespace-nowrap" data-project-name=${e}>${e}</span>
   <span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full ">4</span>
 </a>`;
   li.innerHTML = template;
@@ -255,6 +260,12 @@ export const projectInstancesCreationController = () => {
   readProject().forEach((e, i) => {
     projectFactory(e, i);
   });
+  const projects = document.querySelectorAll(
+    "[data-project-list] [data-project-name]"
+  );
+  [...projects].forEach((e) =>
+    e.addEventListener("click", menuOptions.updateState)
+  );
 };
 
 export function makeFormForNewProject() {
@@ -298,11 +309,12 @@ export function makeFormForNewProject() {
     console.log(projectFormSubmitBtn);
     projectFormSubmitBtn.addEventListener("submit", (e) => {
       e.preventDefault();
+      let nameOfNewProject = sanitize(input.value);
       const { createProject, readProject } = projectDataStore;
-      const duplicateCheck = readProject().includes(input.value);
+      const duplicateCheck = readProject().includes(nameOfNewProject);
       console.log(duplicateCheck);
-      if (input.value && !duplicateCheck) {
-        createProject(input.value);
+      if (nameOfNewProject && !duplicateCheck) {
+        createProject(nameOfNewProject);
 
         if (divOfProjects.firstChild.tagName === "FORM") {
           divOfProjects.firstChild.remove();
@@ -335,14 +347,20 @@ export function makeFormForNewProject() {
 }
 
 //rendering with project/time dependency
+
 export const renderWithFilters = (() => {
   const { getData } = notesDataStore;
   let today = todayDate();
+  let arrToRender = [];
   function renderAllTasksPage() {
-    let arr = getData().filter((e) => e.done === false);
-    let arr2 = getData().filter((e) => e.done === true);
-    console.log(arr);
-    taskInstancesCreationController(arr2);
+    if (toDoStateRender()) {
+      arrToRender = getData().filter((e) => e.done === false);
+    } else {
+      arrToRender = getData().filter((e) => e.done === false);
+    }
+
+    console.log(arrToRender);
+    taskInstancesCreationController(arrToRender);
     console.log("renderWithFilters");
   }
   function renderTodayTasksPage() {
@@ -357,5 +375,22 @@ export const renderWithFilters = (() => {
     console.log(todayTasks);
     taskInstancesCreationController(todayTasks);
   }
-  return { renderAllTasksPage, renderTodayTasksPage, renderWeekTasks };
+  const toDoStateRender = () => {
+    const toDo = document.querySelector("[data-todo]");
+    const done = document.querySelector("[data-done]");
+    console.log(stateHolder.getTodoData());
+    if (stateHolder.getTodoData() === "todo") {
+      toDo.classList.replace("bg-blue-100", "bg-blue-300");
+      done.classList.replace("bg-emerald-300", "bg-emerald-100");
+    } else {
+      toDo.classList.replace("bg-blue-300", "bg-blue-100");
+      done.classList.replace("bg-emerald-100", "bg-emerald-300");
+    }
+  };
+  return {
+    renderAllTasksPage,
+    renderTodayTasksPage,
+    renderWeekTasks,
+    toDoStateRender,
+  };
 })();

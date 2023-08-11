@@ -15,9 +15,9 @@ import {
 import "../components/dataGetAndValidate.js";
 const main = document.querySelector("#content");
 main.append(mainPage());
+pagesListeners();
 sidebarOpenIconMobileListener();
 formProjectSelectInteractions();
 renderWithFilters.renderAllTasksPage();
 addProjectSidebarBtn();
 projectInstancesCreationController();
-pagesListeners();
