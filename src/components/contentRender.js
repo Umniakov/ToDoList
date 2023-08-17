@@ -16,7 +16,7 @@ import { sanitize } from "./sanitize.js";
 
 const { temp } = priorTemplate();
 
-export const tasksFactory = (task, index) => {
+export const tasksFactory = (task) => {
   const { removeItem, updateItem } = notesDataStore;
   const itemDiv = document.createElement("div");
   const render = () => {
@@ -130,6 +130,7 @@ export const tasksFactory = (task, index) => {
       if (e.target.type === "checkbox") {
         textNodes.forEach((e) => e.classList.toggle("line-through"));
         updateItem(task, "done");
+        renderWithFilters.toDoStateRender();
       }
       //editing
       if (e.target.hasAttribute("data-change")) {
@@ -219,7 +220,7 @@ export const tasksFactory = (task, index) => {
     );
   };
   const bodyForTasks = document.querySelector("#bodyForTasks");
-  bodyForTasks.append(itemDiv);
+  bodyForTasks.insertBefore(itemDiv, bodyForTasks.firstChild);
   renderBehavior();
   //if clicked out, remove listener and rerender
   function renderOriginal(event) {
@@ -352,45 +353,64 @@ export const renderWithFilters = (() => {
   const { getData } = notesDataStore;
   let today = todayDate();
   let arrToRender = [];
-  function renderAllTasksPage() {
-    if (toDoStateRender()) {
-      arrToRender = getData().filter((e) => e.done === false);
-    } else {
-      arrToRender = getData().filter((e) => e.done === false);
+  console.log(arrToRender);
+
+  function updateSub(newValue) {
+    composeArr.getListItem(newValue);
+  }
+  menuOptions.subscribe(updateSub);
+
+  const composeArr = (() => {
+    let listItem = "allTasksPage";
+    let doneStatus = "todo";
+    function getDoneStatus(status) {
+      doneStatus = status;
+      if (doneStatus === "done") {
+        arrToRender = getData().filter((e) => e.done === true);
+      } else {
+        arrToRender = getData().filter((e) => e.done === false);
+      }
+      console.log(arrToRender);
+      assemble();
     }
+    function getListItem(item) {
+      listItem = item;
+      getDoneStatus(doneStatus);
+    }
+    function assemble() {
+      if (listItem === "allTasksPage") {
+        taskInstancesCreationController(arrToRender);
+      } else if (listItem === "todayTasksPage") {
+        let todayTasks = arrToRender.filter((e) => today === e.dueDate);
+        taskInstancesCreationController(todayTasks);
+      } else if (listItem === "weekTasks") {
+        let weekTasks = arrToRender.filter((e) => isCurrentWeek(e.dueDate));
+        taskInstancesCreationController(weekTasks);
+      } else {
+        let project = arrToRender.filter((e) => e.project === listItem);
+        if (project) {
+          taskInstancesCreationController(project);
+        }
+      }
+    }
+    return { getListItem, getDoneStatus };
+  })();
 
-    console.log(arrToRender);
-    taskInstancesCreationController(arrToRender);
-    console.log("renderWithFilters");
-  }
-  function renderTodayTasksPage() {
-    let todayTasks = getData().filter((e) => today === e.dueDate);
-    console.log(todayTasks);
-    taskInstancesCreationController(todayTasks);
-    console.log("renderDay");
-  }
-  function renderWeekTasks() {
-    let todayTasks = getData().filter((e) => isCurrentWeek(e.dueDate));
-
-    console.log(todayTasks);
-    taskInstancesCreationController(todayTasks);
-  }
+  //sort by selected category first (todo\done) and send remaining to further filters
   const toDoStateRender = () => {
+    let doneState = stateHolder.getTodoData();
     const toDo = document.querySelector("[data-todo]");
     const done = document.querySelector("[data-done]");
-    console.log(stateHolder.getTodoData());
-    if (stateHolder.getTodoData() === "todo") {
+    if (doneState === "todo") {
       toDo.classList.replace("bg-blue-100", "bg-blue-300");
       done.classList.replace("bg-emerald-300", "bg-emerald-100");
     } else {
       toDo.classList.replace("bg-blue-300", "bg-blue-100");
       done.classList.replace("bg-emerald-100", "bg-emerald-300");
     }
+    composeArr.getDoneStatus(doneState);
   };
   return {
-    renderAllTasksPage,
-    renderTodayTasksPage,
-    renderWeekTasks,
     toDoStateRender,
   };
 })();

@@ -1,6 +1,6 @@
 import { notesDataStore } from "./dataStore.js";
-import { taskInstancesCreationController } from "./contentRender.js";
 import { sanitize } from "./sanitize.js";
+import { renderWithFilters } from "./contentRender.js";
 export const formValidation = () => {
   let { createItem } = notesDataStore;
   const itemAddForm = document.querySelector("#add-item-form");
@@ -43,7 +43,7 @@ export const formValidation = () => {
         done: false,
         id: Date.now(),
       });
-      taskInstancesCreationController(notesDataStore.getData());
+      renderWithFilters.toDoStateRender();
       document
         .querySelector("#btn-to-add-task")
         .classList.remove("buttonDecorationOpen");

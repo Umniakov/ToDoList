@@ -18,6 +18,6 @@ main.append(mainPage());
 pagesListeners();
 sidebarOpenIconMobileListener();
 formProjectSelectInteractions();
-renderWithFilters.renderAllTasksPage();
+renderWithFilters.toDoStateRender();
 addProjectSidebarBtn();
 projectInstancesCreationController();

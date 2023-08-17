@@ -188,35 +188,3 @@ export const formToAddNewItem = () => {
 
   return divForm;
 };
-
-{
-  /* <li>
-<input
-  type="radio"
-  id="project-element-1"
-  name="project-element"
-  value="First"
-  class="fixed opacity-0 pointer-events-none peer"
-  checked
-/>
-<label
-  for="project-element-1"
-  class="peer-checked:bg-blue-500 peer-checked:text-white px-3 peer-checked:border rounded-lg border-white hover:bg-gray-300"
-  >First</label
->
-</li>
-<li>
-<input
-  type="radio"
-  id="project-element-2"
-  name="project-element"
-  value="Second"
-  class="fixed opacity-0 pointer-events-none peer"
-/>
-<label
-  for="project-element-2"
-  class="peer-checked:bg-blue-500 peer-checked:text-white px-3 peer-checked:border rounded-lg border-white hover:bg-gray-300"
-  >Second</label
->
-</li> */
-}

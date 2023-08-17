@@ -75,6 +75,7 @@ export const stateHolder = (() => {
 
 export const menuOptions = (() => {
   let menuState = "allTasksPage";
+  const subscribers = [];
   const updateState = (state) => {
     if (state === "allTasksPage") {
       menuState = "allTasksPage";
@@ -85,12 +86,21 @@ export const menuOptions = (() => {
     } else {
       menuState = state.target.innerText;
     }
+    notifySubscribers();
     console.log(menuState);
   };
+  function subscribe(callback) {
+    subscribers.push(callback);
+  }
+  function notifySubscribers() {
+    for (const subscriber of subscribers) {
+      subscriber(menuState);
+    }
+  }
   const getMenuOption = () => {
     return menuState;
   };
-  return { updateState, getMenuOption };
+  return { updateState, getMenuOption, subscribe };
 })();
 
 //first load, get data from localStorage
