@@ -13,7 +13,6 @@ export function isCurrentWeek(date) {
     const inputDate = date;
     const dateObject = parseISO(inputDate);
     const formattedDate = format(dateObject, "yyyy,M,dd");
-    console.log(formattedDate);
     return isThisWeek(new Date(formattedDate), { weekStartsOn: 1 });
   }
 }

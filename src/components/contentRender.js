@@ -264,9 +264,15 @@ export const projectInstancesCreationController = () => {
   const projects = document.querySelectorAll(
     "[data-project-list] [data-project-name]"
   );
-  [...projects].forEach((e) =>
-    e.addEventListener("click", menuOptions.updateState)
-  );
+  [...projects].forEach((event) => {
+    event.addEventListener("click", menuOptions.updateState);
+    let data = notesDataStore
+      .getData()
+      .filter((item) => item.project === event.innerText);
+    let doneCount = data.filter((e) => e.done === true).length;
+    let toDoCount = data.length - doneCount;
+    event.nextElementSibling.innerText = `${toDoCount}/${doneCount}`;
+  });
 };
 
 export function makeFormForNewProject() {
@@ -347,7 +353,7 @@ export function makeFormForNewProject() {
   }
 }
 
-//rendering with project/time dependency
+//rendering with selected project and status dependency
 
 export const renderWithFilters = (() => {
   const { getData } = notesDataStore;
@@ -378,18 +384,48 @@ export const renderWithFilters = (() => {
       getDoneStatus(doneStatus);
     }
     function assemble() {
+      const toDoInt = document.querySelector("[data-todo] > span");
+      const doneInt = document.querySelector("[data-done] > span");
+      let counter = 0;
+      let countDone = 0;
+      let countToDo = 0;
       if (listItem === "allTasksPage") {
+        let counter = getData();
+        let countDone = counter.filter((e) => e.done === true).length;
+        let countToDo = counter.length - countDone;
+        doneInt.innerText = countDone;
+        toDoInt.innerText = countToDo;
         taskInstancesCreationController(arrToRender);
+        projectDelAndChange().hideForm();
       } else if (listItem === "todayTasksPage") {
         let todayTasks = arrToRender.filter((e) => today === e.dueDate);
+        let counter = getData().filter((e) => today === e.dueDate);
+        let countDone = counter.filter((e) => e.done === true).length;
+        let countToDo = counter.length - countDone;
+        doneInt.innerText = countDone;
+        toDoInt.innerText = countToDo;
         taskInstancesCreationController(todayTasks);
+        projectDelAndChange().hideForm();
       } else if (listItem === "weekTasks") {
         let weekTasks = arrToRender.filter((e) => isCurrentWeek(e.dueDate));
+        counter = getData().filter((e) => isCurrentWeek(e.dueDate));
+        countDone = counter.filter((e) => e.done === true).length;
+        countToDo = counter.length - countDone;
+        doneInt.innerText = countDone;
+        toDoInt.innerText = countToDo;
         taskInstancesCreationController(weekTasks);
+        projectDelAndChange().hideForm();
       } else {
         let project = arrToRender.filter((e) => e.project === listItem);
         if (project) {
+          counter = getData().filter((e) => e.project === listItem);
+          countDone = counter.filter((e) => e.done === true).length;
+          countToDo = counter.length - countDone;
+          doneInt.innerText = countDone;
+          toDoInt.innerText = countToDo;
+          projectInstancesCreationController();
           taskInstancesCreationController(project);
+          projectDelAndChange().addForm();
         }
       }
     }
@@ -409,8 +445,75 @@ export const renderWithFilters = (() => {
       done.classList.replace("bg-emerald-100", "bg-emerald-300");
     }
     composeArr.getDoneStatus(doneState);
+    countersFilters().updateToday();
   };
   return {
     toDoStateRender,
   };
 })();
+//counter in menu just for today open tasks
+const countersFilters = () => {
+  const updateToday = () => {
+    const counter = document.querySelector("[data-today-counter]");
+    let today = todayDate();
+    let toDoCounter = notesDataStore
+      .getData()
+      .filter((e) => e.done === false)
+      .filter((e) => today === e.dueDate);
+    counter.innerText = toDoCounter.length;
+  };
+  return { updateToday };
+};
+
+const projectDelAndChange = () => {
+  const holder = document.querySelector("#prodTitle");
+  const projectName = document.querySelector("[data-project-title]");
+  const phoneScreenDel = document.querySelector("[data-delete-project-dox]");
+  const delProject = document.querySelector("[data-delete-project-title]");
+  const editProject = document.querySelector("[data-edit-project-title]");
+  const renameInputHolder = document.querySelector("[data-for-rename-input]");
+
+  const form = () => {
+    const projectForm = document.createElement("form");
+    projectForm.classList.add("flex", "relative", "items-center");
+    const input = document.createElement("input");
+    const projectFormSubmit = document.createElement("button");
+    projectFormSubmit.setAttribute("type", "submit");
+    projectFormSubmit.innerText = "Add";
+    projectFormSubmit.classList.add(
+      "p-1",
+      "rounded-2xl",
+      "bg-green-200",
+      "absolute",
+      "right-1",
+      "text-xs",
+      "hover:bg-green-300"
+    );
+    input.classList.add(
+      "ml-3",
+      "p-1",
+      "w-40",
+      "border",
+      "rounded-lg",
+      "outline-none"
+    );
+    input.setAttribute("placeholder", "Type here!");
+    projectForm.append(input, projectFormSubmit);
+    return projectForm;
+  };
+  const addForm = () => {
+    holder.classList.remove("hidden");
+    editProject.addEventListener("click", (e) => {
+      if (phoneScreenDel.classList.contains("hidden")) {
+        phoneScreenDel.classList.remove("hidden");
+      }
+      // projectName.classList.add("hidden");
+      console.log("yes");
+      renameInputHolder.append(form());
+    });
+  };
+  const hideForm = () => {
+    holder.classList.add("hidden");
+  };
+  return { addForm, hideForm };
+};

@@ -103,3 +103,8 @@
 .delIcon:hover::after {
   transform: rotate(90deg);
 }
+
+.delIconSmall::before,
+.delIconSmall::after {
+  height: 14px;
+}

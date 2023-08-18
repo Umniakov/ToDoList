@@ -8,21 +8,25 @@ export function formProjectSelectInteractions() {
 
   //close add-new form if clicked outside
   function formListenerHandler(event) {
-    if (
-      event.target !== btnToAddNewTask &&
-      !bodyForTasks.firstChild.contains(event.target)
-    ) {
-      if (bodyForTasks.firstChild.id === "addedForm") {
-        console.log("true");
-        bodyForTasks.firstChild.remove();
-        btnToAddNewTask.classList.remove("buttonDecorationOpen");
-        document.removeEventListener("click", formListenerHandler);
+    if (event.target !== btnToAddNewTask && bodyForTasks.hasChildNodes()) {
+      if (!bodyForTasks.firstChild.contains(event.target)) {
+        if (bodyForTasks.firstChild.id === "addedForm") {
+          console.log("true");
+          bodyForTasks.firstChild.remove();
+          btnToAddNewTask.classList.remove("buttonDecorationOpen");
+          document.removeEventListener("click", formListenerHandler);
+        } else {
+          btnToAddNewTask.classList.remove("buttonDecorationOpen");
+          document.removeEventListener("click", formListenerHandler);
+        }
       }
     }
   }
   btnToAddNewTask.addEventListener("click", () => {
-    if (bodyForTasks.firstChild.id !== "addedForm") {
-      console.log(bodyForTasks.firstChild.id);
+    if (
+      !bodyForTasks.hasChildNodes() ||
+      bodyForTasks.firstChild.id !== "addedForm"
+    ) {
       bodyForTasks.insertBefore(formToAddNewItem(), bodyForTasks.firstChild);
       btnToAddNewTask.classList.add("buttonDecorationOpen");
       document.addEventListener("click", formListenerHandler);

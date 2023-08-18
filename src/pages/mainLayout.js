@@ -2,6 +2,7 @@ import today from "../pics/today.png";
 import todoall from "../pics/todoall.png";
 import week from "../pics/week.png";
 import projects from "../pics/projects.png";
+import editIcon from "../pics/editIcon.png";
 
 const mainPage = () => {
   const layout = document.createElement("div");
@@ -25,7 +26,7 @@ const mainPage = () => {
            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100">
            <img src="${today}" alt="day" class="w-6 h-6">
            <span class="flex-1 ml-3 whitespace-nowrap">Today</span>
-           <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">3</span>
+           <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full" data-today-counter>3</span>
            </a>
         </li>
         <li id="weekTasks">
@@ -51,8 +52,15 @@ const mainPage = () => {
 
 <div class="p-4 sm:ml-64">
    <div class="flex flex-col md:flex-row md:gap-6 gap-1 md:p-4 p-1 items-center justify-evenly md:justify-start border-2 border-gray-200 border-dashed rounded-lg mb-4">
-      <div id='prodTitle' class="rounded-lg bg-orange-100 py-1 px-4 hidden">
-      Project: <span>hehe</span>
+      <div id='prodTitle' class="rounded-lg bg-orange-100 md:py-1 px-4 md:w-fit w-full flex md:block gap-1 items-center py-4 mb-2 md:mb-0">
+      Project: <span data-project-title>hehe</span>
+      <span data-for-rename-input></span>
+         <div class="flex justify-between items-center gap-4 ml-auto">
+         <img src="${editIcon}" alt="all" class="h-6 w-6 hover:scale-105 transform duration-100 hover:rotate-45" data-edit-project-title>
+         <div class="hidden md:block" data-delete-project-dox>
+            <div class="delIcon delIconSmall h-5 w-5 my-2 bg-red-400 hover:bg-red-500 rounded-full relative flex items-center justify-center" data-delete-project-title></div>
+         </div>
+         </div>
       </div>
       <div class="flex gap-6 md:p-4 items-center justify-evenly md:justify-start">
       <button type="button" class="rounded-lg bg-blue-100 py-1 px-4 hover:bg-blue-300" data-todo>To Do
