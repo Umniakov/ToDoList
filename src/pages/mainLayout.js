@@ -52,14 +52,14 @@ const mainPage = () => {
 
 <div class="p-4 sm:ml-64">
    <div class="flex flex-col md:flex-row md:gap-6 gap-1 md:p-4 p-1 items-center justify-evenly md:justify-start border-2 border-gray-200 border-dashed rounded-lg mb-4">
-      <div id='prodTitle' class="rounded-lg bg-orange-100 md:py-1 px-4 md:w-fit w-full flex md:block gap-1 items-center py-4 mb-2 md:mb-0">
-      Project: <span data-project-title>hehe</span>
-      <span data-for-rename-input></span>
+      <div id='prodTitle' class="rounded-lg bg-orange-100 md:py-1 px-4 md:w-fit w-full flex md:block gap-1 items-center py-4 mb-2 md:mb-0 flex-wrap">
+      Project: <span data-project-title></span>
+      <div data-for-rename-input></div>
          <div class="flex justify-between items-center gap-4 ml-auto">
-         <img src="${editIcon}" alt="all" class="h-6 w-6 hover:scale-105 transform duration-100 hover:rotate-45" data-edit-project-title>
-         <div class="hidden md:block" data-delete-project-dox>
-            <div class="delIcon delIconSmall h-5 w-5 my-2 bg-red-400 hover:bg-red-500 rounded-full relative flex items-center justify-center" data-delete-project-title></div>
-         </div>
+            <img src="${editIcon}" alt="all" class="h-6 w-6 hover:scale-105 transform duration-100 hover:rotate-45" data-edit-project-title>
+            <div class="hidden md:block" data-delete-project-dox>
+               <div class="delIcon delIconSmall h-5 w-5 my-2 bg-red-400 hover:bg-red-500 rounded-full relative flex items-center justify-center" data-delete-project-title></div>
+            </div>
          </div>
       </div>
       <div class="flex gap-6 md:p-4 items-center justify-evenly md:justify-start">

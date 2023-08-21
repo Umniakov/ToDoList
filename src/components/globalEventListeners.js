@@ -15,11 +15,15 @@ export function formProjectSelectInteractions() {
           bodyForTasks.firstChild.remove();
           btnToAddNewTask.classList.remove("buttonDecorationOpen");
           document.removeEventListener("click", formListenerHandler);
-        } else {
-          btnToAddNewTask.classList.remove("buttonDecorationOpen");
-          document.removeEventListener("click", formListenerHandler);
         }
       }
+    }
+    if (
+      !bodyForTasks.hasChildNodes() ||
+      bodyForTasks.firstChild.id !== "addedForm"
+    ) {
+      btnToAddNewTask.classList.remove("buttonDecorationOpen");
+      document.removeEventListener("click", formListenerHandler);
     }
   }
   btnToAddNewTask.addEventListener("click", () => {

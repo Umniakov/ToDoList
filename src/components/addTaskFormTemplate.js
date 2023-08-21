@@ -1,6 +1,5 @@
 import { timeStamp } from "./timestamp.js";
-import { projectDataStore } from "./dataStore.js";
-
+import { projectDataStore, menuOptions } from "./dataStore.js";
 const templateCreate = () => {
   const template = `<div
 id="add-item"
@@ -46,7 +45,7 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
       id="drop-down-button"
       class="flex justify-center items-center"
     >
-      Main
+      ${sendToRender()}
       <svg
         width="11"
         height="6"
@@ -160,10 +159,14 @@ export const formToAddNewItem = () => {
   const projectList = divForm.querySelector("#project-drop-down-div");
   const { readProject } = projectDataStore;
   const projectItemTemplate = (projects) => {
+    let found = false;
     projects.forEach((e) => {
       let selectedMainProject = "";
-      if (e === "Main") {
+
+      if (e === menuOptions.getMenuOption()) {
         selectedMainProject = "checked";
+        found = true;
+        console.log(menuOptions.getMenuOption());
       }
       const li = document.createElement("li");
       li.innerHTML = `
@@ -183,8 +186,26 @@ export const formToAddNewItem = () => {
     `;
       projectList.append(li);
     });
+    if (!found) {
+      let liToMark = projects[0];
+      const mainProject = [
+        ...projectList.querySelectorAll("li > input"),
+      ].filter((e) => e.id === liToMark);
+      mainProject[0].checked = true;
+    }
   };
+
   projectItemTemplate(readProject());
 
   return divForm;
+};
+
+const sendToRender = () => {
+  let option = menuOptions.getMenuOption();
+  let isAProject = projectDataStore.readProject().filter((e) => e === option);
+  if (isAProject.length) {
+    return isAProject[0];
+  } else {
+    return projectDataStore.readProject()[0];
+  }
 };

@@ -199,6 +199,7 @@ export const tasksFactory = (task) => {
           Object.entries(updatedObj).forEach(([key, value]) => {
             updateItem(task, key, value);
           });
+          renderWithFilters.toDoStateRender();
           //itemDiv doesn't contain btn anymore
           render();
         });
@@ -357,6 +358,9 @@ export function makeFormForNewProject() {
 
 export const renderWithFilters = (() => {
   const { getData } = notesDataStore;
+
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  const { addForm, hideForm } = projectDelAndChange();
   let today = todayDate();
   let arrToRender = [];
   console.log(arrToRender);
@@ -396,7 +400,7 @@ export const renderWithFilters = (() => {
         doneInt.innerText = countDone;
         toDoInt.innerText = countToDo;
         taskInstancesCreationController(arrToRender);
-        projectDelAndChange().hideForm();
+        hideForm();
       } else if (listItem === "todayTasksPage") {
         let todayTasks = arrToRender.filter((e) => today === e.dueDate);
         let counter = getData().filter((e) => today === e.dueDate);
@@ -405,7 +409,7 @@ export const renderWithFilters = (() => {
         doneInt.innerText = countDone;
         toDoInt.innerText = countToDo;
         taskInstancesCreationController(todayTasks);
-        projectDelAndChange().hideForm();
+        hideForm();
       } else if (listItem === "weekTasks") {
         let weekTasks = arrToRender.filter((e) => isCurrentWeek(e.dueDate));
         counter = getData().filter((e) => isCurrentWeek(e.dueDate));
@@ -414,7 +418,7 @@ export const renderWithFilters = (() => {
         doneInt.innerText = countDone;
         toDoInt.innerText = countToDo;
         taskInstancesCreationController(weekTasks);
-        projectDelAndChange().hideForm();
+        hideForm();
       } else {
         let project = arrToRender.filter((e) => e.project === listItem);
         if (project) {
@@ -423,11 +427,11 @@ export const renderWithFilters = (() => {
           countToDo = counter.length - countDone;
           doneInt.innerText = countDone;
           toDoInt.innerText = countToDo;
-          projectInstancesCreationController();
           taskInstancesCreationController(project);
-          projectDelAndChange().addForm();
+          addForm();
         }
       }
+      projectInstancesCreationController();
     }
     return { getListItem, getDoneStatus };
   })();
@@ -465,13 +469,19 @@ const countersFilters = () => {
   return { updateToday };
 };
 
-const projectDelAndChange = () => {
+function projectDelAndChange() {
   const holder = document.querySelector("#prodTitle");
   const projectName = document.querySelector("[data-project-title]");
   const phoneScreenDel = document.querySelector("[data-delete-project-dox]");
   const delProject = document.querySelector("[data-delete-project-title]");
   const editProject = document.querySelector("[data-edit-project-title]");
   const renameInputHolder = document.querySelector("[data-for-rename-input]");
+
+  // delProject.addEventListener("click", deleteProject);
+
+  // function deleteProject(e) {
+  //   console.log(e);
+  // }
 
   const form = () => {
     const projectForm = document.createElement("form");
@@ -502,18 +512,73 @@ const projectDelAndChange = () => {
     return projectForm;
   };
   const addForm = () => {
+    projectName.innerText = menuOptions.getMenuOption();
     holder.classList.remove("hidden");
+    holder.classList.add("md:block");
     editProject.addEventListener("click", (e) => {
-      if (phoneScreenDel.classList.contains("hidden")) {
+      if (phoneScreenDel.classList.contains("md:block")) {
         phoneScreenDel.classList.remove("hidden");
       }
-      // projectName.classList.add("hidden");
-      console.log("yes");
-      renameInputHolder.append(form());
+      projectName.classList.add("hidden", "md:inline-block");
+      if (!renameInputHolder.hasChildNodes()) {
+        renameInputHolder.append(form());
+      }
+      //form management
+      const input = renameInputHolder.querySelector("input");
+      if (input) {
+        input.focus();
+      }
+      const renameInputForm = document.querySelector(
+        "[data-for-rename-input] > form"
+      );
+      console.log(renameInputForm);
+      renameInputForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        console.log(input.value);
+        let nameOfNewProject = sanitize(input.value);
+        const { updateProject, readProject } = projectDataStore;
+        const duplicateCheck = readProject().includes(nameOfNewProject);
+        console.log(duplicateCheck);
+        if (nameOfNewProject && !duplicateCheck) {
+          //rename project, move all items to new project
+          let itemValue = menuOptions.getMenuOption();
+          updateProject(readProject().indexOf(itemValue), nameOfNewProject);
+          notesDataStore.getData().forEach((e) => {
+            if (e.project === itemValue) {
+              notesDataStore.updateItem(e, "project", nameOfNewProject);
+            }
+          });
+          //updates with rendering and state
+          menuOptions.updateStateViaRename(nameOfNewProject);
+          projectInstancesCreationController();
+          renderWithFilters.toDoStateRender();
+          renameInputHolder.firstChild.remove();
+          projectName.innerText = nameOfNewProject;
+        } else if (duplicateCheck) {
+          input.value = "";
+          input.placeholder = "Already exists";
+          input.classList.add("placeholder:text-red-400");
+        } else {
+          input.placeholder = "Empty :c";
+          input.classList.add("placeholder:text-red-400");
+        }
+      });
+      //close if click outside
+      document.addEventListener("click", (e) => {
+        if (renameInputHolder.hasChildNodes()) {
+          if (
+            !renameInputHolder.firstChild.contains(e.target) &&
+            !e.target.hasAttribute("data-edit-project-title")
+          ) {
+            renameInputHolder.firstChild.remove();
+          }
+        }
+      });
     });
   };
   const hideForm = () => {
     holder.classList.add("hidden");
+    holder.classList.remove("md:block");
   };
   return { addForm, hideForm };
-};
+}

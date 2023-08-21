@@ -10,8 +10,8 @@ export const projectDataStore = (() => {
   const readProject = () => {
     return projectData;
   };
-  const updateProject = (project, value) => {
-    projectData[project] = value;
+  const updateProject = (index, value) => {
+    projectData[index] = value;
     localStorage.setItem("projectData", JSON.stringify(projectData));
   };
   const deleteProject = (project) => {
@@ -89,6 +89,11 @@ export const menuOptions = (() => {
     notifySubscribers();
     console.log(menuState);
   };
+  const updateStateViaRename = (state) => {
+    menuState = state;
+    notifySubscribers();
+    console.log(menuState);
+  };
   function subscribe(callback) {
     subscribers.push(callback);
   }
@@ -100,7 +105,7 @@ export const menuOptions = (() => {
   const getMenuOption = () => {
     return menuState;
   };
-  return { updateState, getMenuOption, subscribe };
+  return { updateState, getMenuOption, subscribe, updateStateViaRename };
 })();
 
 //first load, get data from localStorage
