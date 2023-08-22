@@ -58,7 +58,16 @@ const mainPage = () => {
          <div class="flex justify-between items-center gap-4 ml-auto">
             <img src="${editIcon}" alt="all" class="h-6 w-6 hover:scale-105 transform duration-100 hover:rotate-45" data-edit-project-title>
             <div class="hidden md:block" data-delete-project-dox>
-               <div class="delIcon delIconSmall h-5 w-5 my-2 bg-red-400 hover:bg-red-500 rounded-full relative flex items-center justify-center" data-delete-project-title></div>
+               <div class="delIcon delIconSmall h-5 w-5 my-2 bg-red-400 hover:bg-red-500 rounded-full relative flex items-center justify-center" data-delete-project-title>
+               <div data-dell-message class="w-40 bg-orange-200 flex-col absolute right-0 md:left-0 z-10 p-2 rounded-md hidden">
+                  <p class="pb-1">Move tasks to main project?</p>
+                  <div class="flex justify-between">
+                     <button class="block p-1 bg-green-100 rounded-md" data-del-yes>Yes</button>
+                     <button class="block p-1 bg-red-100 rounded-md" data-del-no>No</button>
+                     <button type="button" class="block p-1 bg-white rounded-md" data-del-back>Back</button>
+                  </div>
+               </div>
+               </div>
             </div>
          </div>
       </div>

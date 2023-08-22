@@ -14,8 +14,9 @@ export const projectDataStore = (() => {
     projectData[index] = value;
     localStorage.setItem("projectData", JSON.stringify(projectData));
   };
-  const deleteProject = (project) => {
-    projectData[project].remove();
+  const deleteProject = (object) => {
+    let index = projectData.indexOf(object);
+    projectData.splice(index, 1);
     localStorage.setItem("projectData", JSON.stringify(projectData));
   };
   return {

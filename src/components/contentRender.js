@@ -360,10 +360,9 @@ export const renderWithFilters = (() => {
   const { getData } = notesDataStore;
 
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  const { addForm, hideForm } = projectDelAndChange();
+
   let today = todayDate();
   let arrToRender = [];
-  console.log(arrToRender);
 
   function updateSub(newValue) {
     composeArr.getListItem(newValue);
@@ -373,6 +372,7 @@ export const renderWithFilters = (() => {
   const composeArr = (() => {
     let listItem = "allTasksPage";
     let doneStatus = "todo";
+
     function getDoneStatus(status) {
       doneStatus = status;
       if (doneStatus === "done") {
@@ -400,7 +400,7 @@ export const renderWithFilters = (() => {
         doneInt.innerText = countDone;
         toDoInt.innerText = countToDo;
         taskInstancesCreationController(arrToRender);
-        hideForm();
+        projectDelAndChange.hideForm();
       } else if (listItem === "todayTasksPage") {
         let todayTasks = arrToRender.filter((e) => today === e.dueDate);
         let counter = getData().filter((e) => today === e.dueDate);
@@ -409,7 +409,7 @@ export const renderWithFilters = (() => {
         doneInt.innerText = countDone;
         toDoInt.innerText = countToDo;
         taskInstancesCreationController(todayTasks);
-        hideForm();
+        projectDelAndChange.hideForm();
       } else if (listItem === "weekTasks") {
         let weekTasks = arrToRender.filter((e) => isCurrentWeek(e.dueDate));
         counter = getData().filter((e) => isCurrentWeek(e.dueDate));
@@ -418,7 +418,7 @@ export const renderWithFilters = (() => {
         doneInt.innerText = countDone;
         toDoInt.innerText = countToDo;
         taskInstancesCreationController(weekTasks);
-        hideForm();
+        projectDelAndChange.hideForm();
       } else {
         let project = arrToRender.filter((e) => e.project === listItem);
         if (project) {
@@ -428,7 +428,7 @@ export const renderWithFilters = (() => {
           doneInt.innerText = countDone;
           toDoInt.innerText = countToDo;
           taskInstancesCreationController(project);
-          addForm();
+          projectDelAndChange.addForm();
         }
       }
       projectInstancesCreationController();
@@ -469,19 +469,81 @@ const countersFilters = () => {
   return { updateToday };
 };
 
-function projectDelAndChange() {
-  const holder = document.querySelector("#prodTitle");
-  const projectName = document.querySelector("[data-project-title]");
-  const phoneScreenDel = document.querySelector("[data-delete-project-dox]");
-  const delProject = document.querySelector("[data-delete-project-title]");
-  const editProject = document.querySelector("[data-edit-project-title]");
-  const renameInputHolder = document.querySelector("[data-for-rename-input]");
+export const projectDelAndChange = (() => {
+  let holder;
+  let projectName;
+  let phoneScreenDel;
+  let editProject;
+  let renameInputHolder;
+  function init() {
+    holder = document.querySelector("#prodTitle");
+    projectName = document.querySelector("[data-project-title]");
+    phoneScreenDel = document.querySelector("[data-delete-project-dox]");
+    editProject = document.querySelector("[data-edit-project-title]");
+    renameInputHolder = document.querySelector("[data-for-rename-input]");
+    //delete management pop-up and listeners
+    const delProject = document.querySelector("[data-delete-project-title]");
+    const dataDelMessage = document.querySelector("[data-dell-message]");
+    const dataDelBack = document.querySelector("[data-del-back]");
+    const dataDelProject = document.querySelector("[data-del-yes]");
+    const dataDelAll = document.querySelector("[data-del-no]");
 
-  // delProject.addEventListener("click", deleteProject);
+    delProject.addEventListener("click", deleteProject);
+    function deleteProject(e) {
+      if (e.target.hasAttribute("data-delete-project-title")) {
+        console.log(menuOptions.getMenuOption());
+        dataDelMessage.classList.remove("hidden");
+        document.addEventListener("click", missClickHide);
+      }
+      function missClickHide(e) {
+        if (
+          !delProject.contains(e.target) &&
+          !e.target.hasAttribute("data-delete-project-title")
+        ) {
+          dataDelMessage.classList.add("hidden");
+          document.removeEventListener("click", missClickHide);
+        }
+      }
+    }
+    dataDelBack.addEventListener("click", (e) => {
+      console.log(e.target);
+      dataDelMessage.classList.add("hidden");
+    });
+    dataDelAll.addEventListener("click", () => {
+      dataDelMessage.classList.add("hidden");
+      //dell items
+      let data = notesDataStore
+        .getData()
+        .filter((item) => item.project === menuOptions.getMenuOption());
+      console.log(data);
+      data.forEach((e) => {
+        notesDataStore.removeItem(e);
+      });
+      //dell project
+      projectDataStore.deleteProject(menuOptions.getMenuOption());
+      renderWithFilters.toDoStateRender();
+      menuOptions.updateStateViaRename("allTasksPage");
+    });
 
-  // function deleteProject(e) {
-  //   console.log(e);
-  // }
+    //dell only project and move tasks to main
+    dataDelProject.addEventListener("click", () => {
+      dataDelMessage.classList.add("hidden");
+      //dell items
+      let data = notesDataStore
+        .getData()
+        .filter((item) => item.project === menuOptions.getMenuOption());
+      console.log(data);
+      let firstProject = projectDataStore.readProject()[0];
+      console.log(firstProject);
+      data.forEach((e) => {
+        notesDataStore.updateItem(e, "project", firstProject);
+      });
+      //dell project
+      projectDataStore.deleteProject(menuOptions.getMenuOption());
+      renderWithFilters.toDoStateRender();
+      menuOptions.updateStateViaRename("allTasksPage");
+    });
+  }
 
   const form = () => {
     const projectForm = document.createElement("form");
@@ -516,6 +578,7 @@ function projectDelAndChange() {
     holder.classList.remove("hidden");
     holder.classList.add("md:block");
     editProject.addEventListener("click", (e) => {
+      document.addEventListener("click", clickOutFn);
       if (phoneScreenDel.classList.contains("md:block")) {
         phoneScreenDel.classList.remove("hidden");
       }
@@ -533,6 +596,7 @@ function projectDelAndChange() {
       );
       console.log(renameInputForm);
       renameInputForm.addEventListener("submit", (e) => {
+        document.removeEventListener("click", clickOutFn);
         e.preventDefault();
         console.log(input.value);
         let nameOfNewProject = sanitize(input.value);
@@ -564,21 +628,28 @@ function projectDelAndChange() {
         }
       });
       //close if click outside
-      document.addEventListener("click", (e) => {
+      //doesn't drop listener if menuOption changed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      function clickOutFn(e) {
+        console.log(renameInputForm.hasChildNodes());
         if (renameInputHolder.hasChildNodes()) {
           if (
             !renameInputHolder.firstChild.contains(e.target) &&
             !e.target.hasAttribute("data-edit-project-title")
           ) {
             renameInputHolder.firstChild.remove();
+            document.removeEventListener("click", clickOutFn);
           }
         }
-      });
+        //!!!!
+        if (!renameInputForm.hasChildNodes()) {
+          document.removeEventListener("click", clickOutFn);
+        }
+      }
     });
   };
   const hideForm = () => {
     holder.classList.add("hidden");
     holder.classList.remove("md:block");
   };
-  return { addForm, hideForm };
-}
+  return { addForm, hideForm, init };
+})();

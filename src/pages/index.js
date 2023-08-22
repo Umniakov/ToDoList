@@ -5,6 +5,7 @@ import mainPage from "./mainLayout.js";
 import {
   renderWithFilters,
   projectInstancesCreationController,
+  projectDelAndChange,
 } from "../components/contentRender.js";
 import {
   sidebarOpenIconMobileListener,
@@ -15,6 +16,7 @@ import {
 import "../components/dataGetAndValidate.js";
 const main = document.querySelector("#content");
 main.append(mainPage());
+projectDelAndChange.init();
 pagesListeners();
 sidebarOpenIconMobileListener();
 formProjectSelectInteractions();
