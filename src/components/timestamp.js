@@ -1,4 +1,4 @@
-import { format, parseISO, isThisWeek } from "date-fns";
+import { format, parseISO, isThisWeek, startOfTomorrow } from "date-fns";
 
 export function timeStamp() {
   return format(new Date(), "MMM dd HH:mm");
@@ -6,6 +6,10 @@ export function timeStamp() {
 
 export function todayDate() {
   return format(new Date(), "yyyy-MM-dd");
+}
+
+export function tomorrowDate() {
+  return format(startOfTomorrow(), "yyyy-MM-dd");
 }
 
 export function isCurrentWeek(date) {

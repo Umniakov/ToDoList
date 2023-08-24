@@ -67,7 +67,5 @@ function validationHints(field) {
         dateField.classList.add(`before:hidden`);
       });
     dateField.classList.remove(`before:hidden`);
-
-    console.log("data");
   }
 }

@@ -1,3 +1,4 @@
+import { todayDate, timeStamp, tomorrowDate } from "../components/timestamp.js";
 export const projectDataStore = (() => {
   let projectData = [];
   const initProjectData = (init) => {
@@ -32,7 +33,6 @@ export const notesDataStore = (() => {
   let notesData = [];
   const initData = (init) => {
     init.forEach((e) => notesData.push(e));
-    console.log(notesData);
   };
   const createItem = (item) => {
     notesData.push(item);
@@ -44,7 +44,6 @@ export const notesDataStore = (() => {
     } else {
       obj[key] = value;
     }
-    // console.log(obj, key);
     localStorage.setItem("notesData", JSON.stringify(notesData));
   };
   const removeItem = (obj) => {
@@ -55,10 +54,7 @@ export const notesDataStore = (() => {
   const getData = () => {
     return notesData;
   };
-  const showInfo = () => {
-    console.log(notesData);
-    console.dir(localStorage);
-  };
+  const showInfo = () => {};
   return { getData, initData, showInfo, createItem, removeItem, updateItem };
 })();
 
@@ -88,12 +84,10 @@ export const menuOptions = (() => {
       menuState = state.target.innerText;
     }
     notifySubscribers();
-    console.log(menuState);
   };
   const updateStateViaRename = (state) => {
     menuState = state;
     notifySubscribers();
-    console.log(menuState);
   };
   function subscribe(callback) {
     subscribers.push(callback);
@@ -109,39 +103,6 @@ export const menuOptions = (() => {
   return { updateState, getMenuOption, subscribe, updateStateViaRename };
 })();
 
-//first load, get data from localStorage
-(() => {
-  // localStorage.clear();
-  let { initData } = notesDataStore;
-  let storage = JSON.parse(localStorage.getItem("notesData")) || "empty";
-  if (storage === "empty" || !storage.length) {
-    storage = [
-      {
-        dueDate: "2023-06-28",
-        priority: "medium",
-        project: "Main",
-        taskDescription: "some text Sure, go ahead, laugh if you want to.",
-        timeOfCreation: "Jun 28 12:45",
-        title: "Title1",
-        done: false,
-        id: 1689703004641,
-      },
-      {
-        dueDate: "2023-06-28",
-        priority: "medium",
-        project: "Second",
-        taskDescription: "some text Sure, go ahead, laugh if you want to.",
-        timeOfCreation: "Jun 28 12:45",
-        title: "Title1",
-        done: true,
-        id: 1689703004642,
-      },
-    ];
-    localStorage.setItem("notesData", JSON.stringify(storage));
-  }
-  initData(storage);
-})();
-
 (() => {
   let { initProjectData } = projectDataStore;
   let storage = JSON.parse(localStorage.getItem("projectData")) || "empty";
@@ -150,4 +111,55 @@ export const menuOptions = (() => {
   }
   localStorage.setItem("projectData", JSON.stringify(storage));
   initProjectData(storage);
+  console.log(projectDataStore.readProject()[0]);
+})();
+
+//first load, get data from localStorage
+(() => {
+  // localStorage.clear();
+  let { initData } = notesDataStore;
+  let storage = JSON.parse(localStorage.getItem("notesData")) || "empty";
+  if (storage === "empty" || !storage.length) {
+    storage = [
+      {
+        dueDate: todayDate(),
+        priority: "medium",
+        project: projectDataStore.readProject()[0],
+        taskDescription:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad quos, nemo ducimus reprehenderit fugiat maxime omnis corporis iure voluptates sunt voluptatibus nostrum quisquam ex repellat reiciendis possimus tempore porro consequuntur.",
+        timeOfCreation: timeStamp(),
+        title: "Lorem",
+        done: false,
+        id: 1689703004641,
+      },
+      {
+        dueDate: todayDate(),
+        priority: "high",
+        project:
+          projectDataStore.readProject()[1] ||
+          projectDataStore.readProject()[0],
+        taskDescription:
+          "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet quas a nobis quisquam sunt iure ipsam obcaecati reiciendis atque hic.",
+        timeOfCreation: timeStamp(),
+        title: "Ipsum",
+        done: true,
+        id: 1689703004642,
+      },
+      {
+        dueDate: tomorrowDate(),
+        priority: "low",
+        project:
+          projectDataStore.readProject()[1] ||
+          projectDataStore.readProject()[0],
+        taskDescription:
+          "Ad quos, nemo ducimus reprehenderit fugiat maxime omnis corporis iure voluptates sunt. Eveniet quas a nobis quisquam sunt iure ipsam obcaecati reiciendis atque hic.",
+        timeOfCreation: timeStamp(),
+        title: "Ipsum",
+        done: false,
+        id: 1689703004643,
+      },
+    ];
+    localStorage.setItem("notesData", JSON.stringify(storage));
+  }
+  initData(storage);
 })();

@@ -38,7 +38,7 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
       </svg>
     </button>
   </div>
-  <div id="projectSelect" class="h-8 flex justify-center items-center">
+  <div id="projectSelect" class="h-8 flex justify-center items-center pt-4">
     <p>Project:</p>
     <button
       type="button"
@@ -71,14 +71,14 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
       name="title"
       id="title"
       placeholder="Title..."
-      class="text-xl font-bold h-12 outline-none focus:border-b"
+      class="pl-2 text-xl font-bold h-12 outline-none focus:border-b"
     />
-    <p class="text-xs text-gray-400 mb-2" id="timeStamp">${timeStamp()}</p>
+    <p class="pl-2 text-xs text-gray-400 mb-2" id="timeStamp">${timeStamp()}</p>
     <textarea
       name="taskDescription"
       id="taskDescription"
       placeholder="Start typing"
-      class="resize-none grow outline-none"
+      class="pl-2 resize-none grow outline-none"
     ></textarea>
   </div>
   <div
@@ -166,7 +166,6 @@ export const formToAddNewItem = () => {
       if (e === menuOptions.getMenuOption()) {
         selectedMainProject = "checked";
         found = true;
-        console.log(menuOptions.getMenuOption());
       }
       const li = document.createElement("li");
       li.innerHTML = `

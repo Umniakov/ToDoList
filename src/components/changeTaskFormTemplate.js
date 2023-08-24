@@ -41,7 +41,7 @@ data-change-form
       </svg>
     </button>
   </div>
-  <div class="h-8 flex justify-center items-center">
+  <div class="h-8 flex justify-center items-center pt-4">
     <p>Project:</p>
     <button
       type="button"
@@ -72,18 +72,18 @@ data-change-form
       type="text"
       name="title"
       placeholder="Title..."
-      class="text-xl font-bold h-12 outline-none focus:border-b" 
+      class="pl-2 text-xl font-bold h-12 outline-none focus:border-b" 
       value="${obj.title}"
     />
-    <p class="text-xs text-gray-400 mb-2" data-time-stamp>${timeStamp()} </p>
+    <p class="pl-2 text-xs text-gray-400 mb-2" data-time-stamp>${timeStamp()} </p>
     <textarea
       name="taskDescription"
       placeholder="Start typing"
-      class="resize-none grow outline-none"
+      class="pl-2 resize-none grow outline-none"
     >${obj.taskDescription}</textarea>
   </div>
   <div
-    class="md:flex-row flex-col flex px-10 py-3 gap-3 justify-between items-center"
+    class="lg:flex-row flex-col flex px-10 gap-3 justify-between items-center"
   >
     <div class="flex items-center">
       <p class="pr-2">Priority:</p>
@@ -140,7 +140,7 @@ data-change-form
       <input
         type="date"
         name="date"
-        class="text-gray-300 focus:text-black"
+        class="text-gray-300 focus:text-black pl-2"
         value="${obj.dueDate}"
       />
     </div>
@@ -155,7 +155,7 @@ export const formToChangeItem = (id) => {
   let index = data.findIndex((e) => e.id === id);
   divForm.innerHTML = templateCreate(data[index]);
   const projectList = divForm.querySelector("[data-btn-project-list]");
-
+  divForm.classList.add("md:col-start-2", "col-start-1", "col-end-12", "py-3");
   const { readProject } = projectDataStore;
   const projectItemTemplate = (projects) => {
     projects.forEach((e) => {

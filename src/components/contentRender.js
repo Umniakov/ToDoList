@@ -22,51 +22,56 @@ export const tasksFactory = (task) => {
   const render = () => {
     itemDiv.id = task.id;
     itemDiv.classList.add(
-      "flex",
+      "grid",
+      "grid-cols-12",
+      "md:grid-cols-11+1",
       "items-center",
       "hover:bg-slate-100",
       "rounded-lg",
       "py-1",
       "px-3",
-      "gap-4",
-      "group"
+      "gap-0",
+      "md:gap-4",
+      "group",
+      "bg-slate-50"
     );
     itemDiv.innerHTML = `
-        <div class="">
+        <div class="justify-self-center">
         <input type="checkbox" class="h-5 w-5 bg-cyan-100 data-done">
         </div>
-        <div data-data class="grow">
-          <h2 data-text='h2' class='outline-none' contenteditable="true">${
+        <div data-data class="grow ml-4 md:ml-0 col-start-2 lg:col-end-10 xl:col-end-11 col-end-12">
+          <h2 data-text='h2' class='whitespace-normal outline-none font-bold' contenteditable="true">${
             task.title
           }</h2>
-          <p data-text='p' class='outline-none' contenteditable="true">${
+          <p data-text='p' class='whitespace-normal outline-none' contenteditable="true">${
             task.taskDescription
           }</p>
-          <div class="flex items-center" data-priority-parent>
+          <div class="flex items-start flex-col md:items-center md:flex-row justify-start" data-priority-parent>
           <p class="text-gray-500">${task.timeOfCreation}</p>
-          <p class="text-white px-3 py-0.5 rounded-lg border-white ml-2 text-xs flex items-center cursor-pointer" data-priority>${
+          <p class="text-white px-3 py-0.5 rounded-lg border-white ml-0 md:ml-2 text-xs flex items-center cursor-pointer" data-priority>${
             task.priority
           }</p>
           <div class="px-3 py-0.5 rounded-lg border-white ml-2 text-xs items-center cursor-pointer flex invisible" data-priority-selector></div>
           </div>
         </div>
-        <div class="md:w-56 hidden md:block">
+        <div class="md:w-56 hidden lg:block">
           <div class="text-gray-500">Due date: ${dataFormatForPrint(
             task.dueDate
           )}</div>
           <div class="text-gray-500">Project: ${task.project}</div>
         </div>
-        <div class="flex flex-col md:flex-row ml-auto md:invisible items-center justify-center gap-2 group-hover:visible" data-change-del-btn>
-          <div>
-          <img src="${editIcon}" alt="edit" class="max-w-none h-6 w-6 hover:scale-105 transform duration-100 hover:rotate-45" data-change>
-          </div>
-          <div class="hidden" data-show-del-btn>
-            <div class="delIcon h-8 w-8 my-2 bg-red-400 hover:bg-red-500 rounded-full relative flex items-center justify-center" data-del>
-            </div>
-          </div>
+        <div class="col-start-12 col-end-12 justify-self-center flex flex-col md:flex-row items-center justify-center gap-2 group-hover:visible" data-change-del-btn>
+        <div>
+        <img src="${editIcon}" alt="edit" class="max-w-none h-6 w-6 hover:scale-105 transform duration-100 hover:rotate-45" data-change>
         </div>
-  `;
+        <div class="hidden" data-show-del-btn>
+        <div class="delIcon h-6 w-6 my-2 bg-red-400 hover:bg-red-500 rounded-full relative flex items-center justify-center" data-del>
+        </div>
+        </div>
+        </div>
+        `;
     return itemDiv;
+    //md:invisible
   };
   render();
 
@@ -103,7 +108,17 @@ export const tasksFactory = (task) => {
           e.checked = true;
         }
       });
+      document.addEventListener("click", clickOutManager);
     });
+    function clickOutManager(e) {
+      if (!priorSelector.contains(e.target) && !item.contains(e.target)) {
+        priorSelector.innerHTML = "";
+        priorSelector.classList.add("invisible");
+        item.textContent = task.priority;
+        item.classList.remove("hidden");
+        document.removeEventListener("click", clickOutManager);
+      }
+    }
     priorSelector.addEventListener("click", changePriority);
     function changePriority(e) {
       if (e.target.nodeName === "INPUT") {
@@ -126,6 +141,7 @@ export const tasksFactory = (task) => {
       if (e.target.hasAttribute("data-del")) {
         itemDiv.remove();
         removeItem(task);
+        renderWithFilters.toDoStateRender();
       }
       if (e.target.type === "checkbox") {
         textNodes.forEach((e) => e.classList.toggle("line-through"));
@@ -138,7 +154,8 @@ export const tasksFactory = (task) => {
         const bebe = itemDiv.children;
         [...bebe].forEach((e) => {
           if (!e.hasAttribute("data-change-del-btn")) {
-            e.classList.add("hidden", "md:hidden");
+            console.log(e);
+            e.classList.add("hidden", "md:hidden", "lg:hidden");
           } else {
             e.children[1].classList.remove("hidden");
             e.children[0].classList.add("hidden");
@@ -180,7 +197,6 @@ export const tasksFactory = (task) => {
         //write changes to datastore
         btnToConfirmChange.addEventListener("click", (event) => {
           event.preventDefault();
-          console.log("yesBtn");
           const updatedObj = {};
           updatedObj.title = itemDiv.querySelector('input[name="title"]').value;
           updatedObj.dueDate =
@@ -205,7 +221,6 @@ export const tasksFactory = (task) => {
         });
       }
     });
-
     //update title and text with "editable"
     textNodes.forEach((e) =>
       e.addEventListener("input", () => {
@@ -226,7 +241,6 @@ export const tasksFactory = (task) => {
   //if clicked out, remove listener and rerender
   function renderOriginal(event) {
     if (!itemDiv.contains(event.target)) {
-      console.log("yesOut");
       render();
       renderBehavior();
       document.removeEventListener("click", renderOriginal);
@@ -237,7 +251,6 @@ export const tasksFactory = (task) => {
 export function taskInstancesCreationController(arr) {
   const bodyForTasks = document.querySelector("#bodyForTasks");
   bodyForTasks.innerHTML = "";
-  // console.log(arr);
   arr.forEach((e, i) => {
     tasksFactory(e, i);
   });
@@ -314,13 +327,11 @@ export function makeFormForNewProject() {
     if (inputFocus) {
       inputFocus.focus();
     }
-    console.log(projectFormSubmitBtn);
     projectFormSubmitBtn.addEventListener("submit", (e) => {
       e.preventDefault();
       let nameOfNewProject = sanitize(input.value);
       const { createProject, readProject } = projectDataStore;
       const duplicateCheck = readProject().includes(nameOfNewProject);
-      console.log(duplicateCheck);
       if (nameOfNewProject && !duplicateCheck) {
         createProject(nameOfNewProject);
 
@@ -340,12 +351,10 @@ export function makeFormForNewProject() {
     //close if click outside
     document.addEventListener("click", (e) => {
       if (divOfProjects.firstChild.tagName === "FORM") {
-        console.log("hi");
         if (
           !bodyForProjects.firstChild.contains(e.target) &&
           !e.target.hasAttribute("data-add-project-btn")
         ) {
-          console.log("yes");
           divOfProjects.firstChild.remove();
           projectInstancesCreationController();
         }
@@ -380,7 +389,6 @@ export const renderWithFilters = (() => {
       } else {
         arrToRender = getData().filter((e) => e.done === false);
       }
-      console.log(arrToRender);
       assemble();
     }
     function getListItem(item) {
@@ -428,7 +436,7 @@ export const renderWithFilters = (() => {
           doneInt.innerText = countDone;
           toDoInt.innerText = countToDo;
           taskInstancesCreationController(project);
-          projectDelAndChange.addForm();
+          projectDelAndChange.addForm(listItem);
         }
       }
       projectInstancesCreationController();
@@ -475,12 +483,14 @@ export const projectDelAndChange = (() => {
   let phoneScreenDel;
   let editProject;
   let renameInputHolder;
+  let buttonsForMain;
   function init() {
     holder = document.querySelector("#prodTitle");
     projectName = document.querySelector("[data-project-title]");
     phoneScreenDel = document.querySelector("[data-delete-project-dox]");
     editProject = document.querySelector("[data-edit-project-title]");
     renameInputHolder = document.querySelector("[data-for-rename-input]");
+    buttonsForMain = document.querySelector("[data-proj-settings-block]");
     //delete management pop-up and listeners
     const delProject = document.querySelector("[data-delete-project-title]");
     const dataDelMessage = document.querySelector("[data-dell-message]");
@@ -491,7 +501,6 @@ export const projectDelAndChange = (() => {
     delProject.addEventListener("click", deleteProject);
     function deleteProject(e) {
       if (e.target.hasAttribute("data-delete-project-title")) {
-        console.log(menuOptions.getMenuOption());
         dataDelMessage.classList.remove("hidden");
         document.addEventListener("click", missClickHide);
       }
@@ -505,8 +514,7 @@ export const projectDelAndChange = (() => {
         }
       }
     }
-    dataDelBack.addEventListener("click", (e) => {
-      console.log(e.target);
+    dataDelBack.addEventListener("click", () => {
       dataDelMessage.classList.add("hidden");
     });
     dataDelAll.addEventListener("click", () => {
@@ -515,7 +523,6 @@ export const projectDelAndChange = (() => {
       let data = notesDataStore
         .getData()
         .filter((item) => item.project === menuOptions.getMenuOption());
-      console.log(data);
       data.forEach((e) => {
         notesDataStore.removeItem(e);
       });
@@ -532,9 +539,7 @@ export const projectDelAndChange = (() => {
       let data = notesDataStore
         .getData()
         .filter((item) => item.project === menuOptions.getMenuOption());
-      console.log(data);
       let firstProject = projectDataStore.readProject()[0];
-      console.log(firstProject);
       data.forEach((e) => {
         notesDataStore.updateItem(e, "project", firstProject);
       });
@@ -551,7 +556,7 @@ export const projectDelAndChange = (() => {
     const input = document.createElement("input");
     const projectFormSubmit = document.createElement("button");
     projectFormSubmit.setAttribute("type", "submit");
-    projectFormSubmit.innerText = "Add";
+    projectFormSubmit.innerText = "Ok";
     projectFormSubmit.classList.add(
       "p-1",
       "rounded-2xl",
@@ -573,18 +578,25 @@ export const projectDelAndChange = (() => {
     projectForm.append(input, projectFormSubmit);
     return projectForm;
   };
-  const addForm = () => {
+  const addForm = (main) => {
+    if (main === projectDataStore.readProject()[0]) {
+      holder.classList.remove("hidden");
+      buttonsForMain.classList.replace("flex", "hidden");
+      projectName.innerText = menuOptions.getMenuOption();
+      return;
+    }
+    buttonsForMain.classList.replace("hidden", "flex");
     projectName.innerText = menuOptions.getMenuOption();
     holder.classList.remove("hidden");
     holder.classList.add("md:block");
-    editProject.addEventListener("click", (e) => {
-      document.addEventListener("click", clickOutFn);
+    editProject.addEventListener("click", () => {
       if (phoneScreenDel.classList.contains("md:block")) {
         phoneScreenDel.classList.remove("hidden");
       }
       projectName.classList.add("hidden", "md:inline-block");
       if (!renameInputHolder.hasChildNodes()) {
         renameInputHolder.append(form());
+        document.addEventListener("click", clickOutFn);
       }
       //form management
       const input = renameInputHolder.querySelector("input");
@@ -594,15 +606,11 @@ export const projectDelAndChange = (() => {
       const renameInputForm = document.querySelector(
         "[data-for-rename-input] > form"
       );
-      console.log(renameInputForm);
       renameInputForm.addEventListener("submit", (e) => {
-        document.removeEventListener("click", clickOutFn);
         e.preventDefault();
-        console.log(input.value);
         let nameOfNewProject = sanitize(input.value);
         const { updateProject, readProject } = projectDataStore;
         const duplicateCheck = readProject().includes(nameOfNewProject);
-        console.log(duplicateCheck);
         if (nameOfNewProject && !duplicateCheck) {
           //rename project, move all items to new project
           let itemValue = menuOptions.getMenuOption();
@@ -628,9 +636,7 @@ export const projectDelAndChange = (() => {
         }
       });
       //close if click outside
-      //doesn't drop listener if menuOption changed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       function clickOutFn(e) {
-        console.log(renameInputForm.hasChildNodes());
         if (renameInputHolder.hasChildNodes()) {
           if (
             !renameInputHolder.firstChild.contains(e.target) &&
@@ -639,10 +645,6 @@ export const projectDelAndChange = (() => {
             renameInputHolder.firstChild.remove();
             document.removeEventListener("click", clickOutFn);
           }
-        }
-        //!!!!
-        if (!renameInputForm.hasChildNodes()) {
-          document.removeEventListener("click", clickOutFn);
         }
       }
     });

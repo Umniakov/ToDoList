@@ -11,7 +11,6 @@ export function formProjectSelectInteractions() {
     if (event.target !== btnToAddNewTask && bodyForTasks.hasChildNodes()) {
       if (!bodyForTasks.firstChild.contains(event.target)) {
         if (bodyForTasks.firstChild.id === "addedForm") {
-          console.log("true");
           bodyForTasks.firstChild.remove();
           btnToAddNewTask.classList.remove("buttonDecorationOpen");
           document.removeEventListener("click", formListenerHandler);
@@ -53,14 +52,12 @@ export function formProjectSelectInteractions() {
       projectDropDownDiv.classList.toggle("hidden");
     }
     function chooseOption(e) {
-      console.dir(e.target);
       if (e.target.nodeName === "INPUT") {
         projectDropDownDiv.classList.toggle("hidden");
         projectDropDownBnt.firstChild.textContent = `${e.target.value}`;
       }
     }
     function clickOut(e) {
-      console.dir(e.target);
       if (
         !projectDropDownDiv.contains(e.target) &&
         !projectDropDownBnt.contains(e.target)
@@ -90,8 +87,7 @@ export function sidebarOpenIconMobileListener() {
 export function addProjectSidebarBtn() {
   const btnToAddProject = document.querySelector("[data-add-project-btn]");
   btnToAddProject.addEventListener("click", addNewProjectHandler);
-  function addNewProjectHandler(e) {
-    console.log(e.target);
+  function addNewProjectHandler() {
     makeFormForNewProject();
   }
 }
@@ -105,7 +101,6 @@ export function pagesListeners() {
   // const projects = document.querySelectorAll(
   //   "[data-project-list] [data-project-name]"
   // );
-  console.log([allTasksPage], [todayTasksPage]);
   [allTasksPage, todayTasksPage, weekTasks].forEach((e) =>
     e.addEventListener("click", () => menuOptions.updateState(e.id))
   );
