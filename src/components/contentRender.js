@@ -39,19 +39,24 @@ export const tasksFactory = (task) => {
         <div class="justify-self-center">
         <input type="checkbox" class="h-5 w-5 bg-cyan-100 data-done">
         </div>
-        <div data-data class="grow ml-4 md:ml-0 col-start-2 lg:col-end-10 xl:col-end-11 col-end-12">
+        <div data-data class="grow ml-4 md:ml-0 col-start-2 lg:col-end-10 2xl:col-end-11 col-end-12">
           <h2 data-text='h2' class='whitespace-normal outline-none font-bold' contenteditable="true" spellcheck="false">${
             task.title
           }</h2>
           <p data-text='p' class='whitespace-normal outline-none' contenteditable="true" spellcheck="false">${
             task.taskDescription
           }</p>
-          <div class="flex items-start flex-col md:items-center md:flex-row justify-start" data-priority-parent>
-          <p class="text-gray-500">${task.timeOfCreation}</p>
-          <p class="text-white px-3 py-0.5 rounded-lg border-white ml-0 md:ml-2 text-xs flex items-center cursor-pointer" data-priority>${
+          <div class="flex items-start flex-col lg:items-center lg:flex-row justify-start" data-priority-parent>
+          <div class="flex w-full lg:w-auto pt-2">
+            <p class="text-gray-500">${task.timeOfCreation}</p>
+            <p class="ml-auto text-gray-500 lg:hidden">Due date: ${dataFormatForPrint(
+              task.dueDate
+            )}</p>
+          </div>
+          <p class="text-white px-3 py-0.5 rounded-lg border-white ml-0 md:ml-2 text-xs flex items-center cursor-pointer mt-1" data-priority>${
             task.priority
           }</p>
-          <div class="px-3 py-0.5 rounded-lg border-white ml-2 text-xs items-center cursor-pointer flex invisible" data-priority-selector></div>
+          <div class="px-3 py-0.5 rounded-lg border-white ml-2 text-xs items-center cursor-pointer hidden mt-1" data-priority-selector></div>
           </div>
         </div>
         <div class="md:w-56 hidden lg:block">
@@ -98,9 +103,9 @@ export const tasksFactory = (task) => {
     priorityColoring(item);
     const priorSelector = itemDiv.querySelector("[data-priority-selector]");
     item.addEventListener("click", () => {
-      item.classList.add("hidden");
+      item.classList.replace("flex", "hidden");
       priorSelector.innerHTML = temp();
-      priorSelector.classList.remove("invisible");
+      priorSelector.classList.replace("hidden", "flex");
       priorityColoring(priorSelector);
       const priorit = priorSelector.querySelectorAll('input[type="radio"]');
       priorit.forEach((e) => {
@@ -113,9 +118,8 @@ export const tasksFactory = (task) => {
     function clickOutManager(e) {
       if (!priorSelector.contains(e.target) && !item.contains(e.target)) {
         priorSelector.innerHTML = "";
-        priorSelector.classList.add("invisible");
         item.textContent = task.priority;
-        item.classList.remove("hidden");
+        item.classList.replace("hidden", "flex");
         document.removeEventListener("click", clickOutManager);
       }
     }
@@ -125,7 +129,8 @@ export const tasksFactory = (task) => {
         updateItem(task, "priority", e.target.defaultValue);
         priorityColoring(priorSelector);
         priorSelector.innerHTML = "";
-        priorSelector.classList.add("invisible");
+        item.classList.replace("hidden", "flex");
+        priorSelector.classList.replace("flex", "hidden");
         priorityColoring(item);
         item.textContent = e.target.defaultValue;
         item.classList.remove("hidden");
@@ -364,11 +369,8 @@ export function makeFormForNewProject() {
 }
 
 //rendering with selected project and status dependency
-
 export const renderWithFilters = (() => {
   const { getData } = notesDataStore;
-
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   let today = todayDate();
   let arrToRender = [];
@@ -642,6 +644,8 @@ export const projectDelAndChange = (() => {
             !renameInputHolder.firstChild.contains(e.target) &&
             !e.target.hasAttribute("data-edit-project-title")
           ) {
+            projectName.classList.remove("hidden", "md:inline-block");
+            phoneScreenDel.classList.add("hidden");
             renameInputHolder.firstChild.remove();
             document.removeEventListener("click", clickOutFn);
           }

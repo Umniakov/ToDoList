@@ -71,7 +71,6 @@ export function formProjectSelectInteractions() {
 export function sidebarOpenIconMobileListener() {
   const barButton = document.querySelector("[data-drawer-target]");
   const sidebarMenu = document.querySelector("#default-sidebar");
-  const menuElements = document.querySelector("[data-menu-elements]");
 
   barButton.addEventListener("click", () => {
     sidebarMenu.classList.toggle("-translate-x-full");
@@ -80,9 +79,6 @@ export function sidebarOpenIconMobileListener() {
     const outsideClick =
       !sidebarMenu.contains(elem.target) && !barButton.contains(elem.target);
     if (outsideClick) {
-      sidebarMenu.classList.add("-translate-x-full");
-    }
-    if (menuElements.contains(elem.target)) {
       sidebarMenu.classList.add("-translate-x-full");
     }
   });
@@ -101,8 +97,12 @@ export function pagesListeners() {
   const allTasksPage = document.querySelector("#allTasksPage");
   const todayTasksPage = document.querySelector("#todayTasksPage");
   const weekTasks = document.querySelector("#weekTasks");
+  const sidebarMenu = document.querySelector("#default-sidebar");
   [allTasksPage, todayTasksPage, weekTasks].forEach((e) =>
-    e.addEventListener("click", () => menuOptions.updateState(e.id))
+    e.addEventListener("click", () => {
+      sidebarMenu.classList.add("-translate-x-full");
+      menuOptions.updateState(e.id);
+    })
   );
   const toDo = document.querySelector("[data-todo]");
   const done = document.querySelector("[data-done]");
