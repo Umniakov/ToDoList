@@ -72,7 +72,8 @@ data-change-form
       type="text"
       name="title"
       placeholder="Title..."
-      class="pl-2 text-xl font-bold h-12 outline-none focus:border-b" 
+      class="pl-2 text-xl font-bold h-12 outline-none focus:border-b"
+      spellcheck='false' 
       value="${obj.title}"
     />
     <p class="pl-2 text-xs text-gray-400 mb-2" data-time-stamp>${timeStamp()} </p>
@@ -80,6 +81,7 @@ data-change-form
       name="taskDescription"
       placeholder="Start typing"
       class="pl-2 resize-none grow outline-none"
+      spellcheck="false"
     >${obj.taskDescription}</textarea>
   </div>
   <div

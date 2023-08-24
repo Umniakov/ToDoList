@@ -40,10 +40,10 @@ export const tasksFactory = (task) => {
         <input type="checkbox" class="h-5 w-5 bg-cyan-100 data-done">
         </div>
         <div data-data class="grow ml-4 md:ml-0 col-start-2 lg:col-end-10 xl:col-end-11 col-end-12">
-          <h2 data-text='h2' class='whitespace-normal outline-none font-bold' contenteditable="true">${
+          <h2 data-text='h2' class='whitespace-normal outline-none font-bold' contenteditable="true" spellcheck="false">${
             task.title
           }</h2>
-          <p data-text='p' class='whitespace-normal outline-none' contenteditable="true">${
+          <p data-text='p' class='whitespace-normal outline-none' contenteditable="true" spellcheck="false">${
             task.taskDescription
           }</p>
           <div class="flex items-start flex-col md:items-center md:flex-row justify-start" data-priority-parent>

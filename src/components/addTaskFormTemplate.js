@@ -71,6 +71,7 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
       name="title"
       id="title"
       placeholder="Title..."
+      spellcheck="false"
       class="pl-2 text-xl font-bold h-12 outline-none focus:border-b"
     />
     <p class="pl-2 text-xs text-gray-400 mb-2" id="timeStamp">${timeStamp()}</p>
@@ -78,6 +79,7 @@ class="px-2 h-96 border-2 border-gray-200 border-dashed rounded-lg bg-white"
       name="taskDescription"
       id="taskDescription"
       placeholder="Start typing"
+      spellcheck="false"
       class="pl-2 resize-none grow outline-none"
     ></textarea>
   </div>
